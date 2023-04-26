@@ -21,7 +21,7 @@ class App:
         self.show_lines(surface)
 
     def show_bg(self, surface):
-        bg_texture = os.path.join(f'assets/map.png')
+        bg_texture = os.path.join(f'assets/truc_bach_map.png')
         self.map = pygame.image.load(bg_texture).convert()
         surface.blit(self.map, [0, 0])
 

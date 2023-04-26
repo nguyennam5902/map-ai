@@ -18,6 +18,7 @@ class Main:
         screen = self.screen
         for i in range(len(MAP_POINTS)):
             app.draw_point(f"point_{i}", MAP_POINTS[i][0], MAP_POINTS[i][1])
+        print(len(app.points))
         #TODO: Add roads
 
         for i in range(len(PATHS)):
@@ -30,21 +31,16 @@ class Main:
         start_point = None
         while True:
             app.show_display(screen)
-            button_rect = draw.rect(screen, button_color,
-                                    (button_location[0], button_location[1],
-                                     button_width, button_height))
-            text_surface = font.Font(None, 36).render("Search path", True,
-                                                      Color("white"))
-            text_rect = text_surface.get_rect(center=button_rect.center)
-            screen.blit(text_surface, text_rect)
-            draw.rect(screen, button_border_color,
-                      (button_location[0], button_location[1], button_width,
-                       button_height), 2)
+            # button_rect = draw.rect(screen, button_color,(button_location[0], button_location[1],button_width, button_height))
+            # text_surface = font.Font(None, 36).render("Search path", True,Color("white"))
+            # text_rect = text_surface.get_rect(center=button_rect.center)
+            # screen.blit(text_surface, text_rect)
+            # draw.rect(screen, button_border_color,(button_location[0], button_location[1], button_width,button_height), 2)
             display.flip()
             for e in event.get():
                 if e.type == MOUSEBUTTONDOWN:
-                    if button_rect.collidepoint(e.pos):
-                        print("Button clicked!")
+                    # if button_rect.collidepoint(e.pos):
+                    #     print("Button clicked!")
                     x, y = e.pos
                     #TODO: Draw point here
 
@@ -52,11 +48,11 @@ class Main:
                     app.dragging = True
                 elif e.type == MOUSEBUTTONUP:
                     x, y = e.pos
-                    # if e.button == 1:  # Left mouse button
-                    #     print(f"Left mouse button clicked at {x} - {y}")
-                    # elif e.button == 3:  # Right mouse button
-                    #     print(f"Right mouse button clicked at {x} - {y}")
-                    # app.draw_point("X", x, y)
+                    if e.button == 1:  # Left mouse button
+                        print(f"Left mouse button clicked at {x} - {y}")
+                    elif e.button == 3:  # Right mouse button
+                        print(f"Right mouse button clicked at {x} - {y}")
+                    app.draw_point("X", x, y)
 
                     end_point = None
                     no_close = True
@@ -77,8 +73,8 @@ class Main:
                 elif e.type == KEYDOWN:
                     if e.key == K_r:
                         #undo
-                        if (len(app.roads) > 0):
-                            app.roads.pop()
+                        if (len(app.points) > 0):
+                            app.points.pop()
 
                     elif e.key == K_c:
                         for i in range(len(POINTS) - 1):
