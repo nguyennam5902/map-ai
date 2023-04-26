@@ -77,34 +77,3 @@ class OpenList:
         self.H[index] = self.getMin() + 1
         self.shift_up(index)
         self.extractMin()
-
-
-# class AccountPoint:
-    
-#     def __init__(self, point) -> None:
-#         self.point = point
-#         self.f = INF
-#         self.g = INF
-#         self.h = INF
-#         self.parent = None
-
-#     def calc_dist(self, __value):
-#         return math.dist((self.point.x, self.point.y),(__value.point.x, __value.point.y))
-
-#     def __eq__(self, __value: object) -> bool:
-#         return self.point.x == __value.point.x and self.point.y == __value.point.y
-
-
-
-# opList = OpenList()
-# opList.insert(AccountPoint(2,3))
-# opList.insert(AccountPoint(2,32))
-# opList.insert(AccountPoint(2,45))
-# opList.insert(AccountPoint(2,14))
-# opList.insert(AccountPoint(2,21))
-# opList.insert(AccountPoint(2,31))
-# opList.insert(AccountPoint(2,7))
-# opList.insert(AccountPoint(2,11))
-
-# while not opList.is_empty():
-#     print(opList.extractMin().f)
