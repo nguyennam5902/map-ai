@@ -1,12 +1,20 @@
+import math
 from const import *
 from point import Point
+from road import TwoWayRoad
 
 
 class Map:
     def __init__(self):
         self.img = None
-        self.map_points = {}
-        self.map_roads = {}
+        
+        points = set()
+        for from_pos, to_pos in ROADS:
+            points.add(from_pos)
+            points.add(to_pos)
+        
+        self.map_points = { str(point): Point("", point) for point in points }
+        self.roads = [ TwoWayRoad(self.map_points[str(from_pos)], self.map_points[str(to_pos)]) for from_pos, to_pos in ROADS ]
         self.current_route = []
         
     def show_bg(self):
@@ -21,8 +29,8 @@ class Map:
     def find_route(self, start_pos, end_pos):
             
         process_point = {}
-        for point in self.map_points.values:
-            process_point[str(point)] = ProcessPoint(point)
+        for key in self.map_points:
+            process_point[key] = ProcessPoint(self.map_points[key])
             
         if self.map_points[str(start_pos)] is None:
             process_point[str(start_pos)] = ProcessPoint(start_pos)
@@ -38,7 +46,11 @@ class Map:
         while len(open_lst) > 0:
             # find node with the least f on the open list -> q
             minf = min([ process_point[key].f for key in open_lst])
-            q = list(process_point.keys)[list(process_point.values).index(minf)]
+            q = None
+            for key in open_lst:
+                if minf == process_point[key].f:
+                    q = key
+                    break
             
             # pop q from open list
             open_lst.remove(q)
@@ -53,7 +65,17 @@ class Map:
                 current_f = process_to_point.f
                 if process_to_point.pos == end_pos:
                     process_to_point.parent = current_point
-                    print("FOUND")
+                    
+                    stack = []
+                    k = process_to_point
+                    while k is not None:
+                        stack.append(k)
+                        k = k.parent
+                    
+                    while len(stack) > 0:
+                        print(stack[-1].pos)
+                        stack.pop()
+                    
                     found = True
                     return
                 
@@ -83,7 +105,11 @@ class ProcessPoint:
         self.h = INFINITY
         self.parent = None
         
+    def _calc_dist(self, pos):
+        return math.dist(self.pos, pos)
+        
     def __str__(self):
         return f'{self.pos}'
 
-    
+map = Map()
+map.find_route((781, 733), (81, 701))

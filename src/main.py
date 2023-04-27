@@ -75,7 +75,7 @@ class Main:
                         #undo
                         if (len(app.points) > 0):
                             app.points.pop()
-
+                            
                     elif e.key == K_c:
                         for i in range(len(POINTS) - 1):
                             x1, y1 = POINTS[i]
