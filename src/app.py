@@ -47,8 +47,8 @@ class App:
         self.roads.append(road)
         # print(str(road) + ",")
 
-    def draw_point(self, name, x: int, y: int):
-        self.add_point(Point(name, x, y))
+    def draw_point(self, x: int, y: int):
+        self.add_point(Point(x, y))
 
     def find_path(self, start_point: Point, end_point: Point):
         print(start_point.name + " -->" + end_point.name)

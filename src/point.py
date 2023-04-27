@@ -4,9 +4,9 @@ from const import *
 
 
 class Point:
-    def __init__(self, name: str, pos, pos2=None):
+    def __init__(self, pos, pos2=None):
         #receive pos as (x,y)
-        self.name = name
+        # self.name = name
         if pos2 is None:
             self.pos = pos
             self.x, self.y = pos
@@ -37,4 +37,5 @@ class Point:
         return self.x == _point.x and self.y == _point.y
 
     def __str__(self):
-        return f'{self.name}{self.pos}'
+        # return f'{self.name}{self.pos}'
+        return f'{self.pos}'

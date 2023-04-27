@@ -17,7 +17,7 @@ class Main:
         app = self.app
         screen = self.screen
         for i in range(len(MAP_POINTS)):
-            app.draw_point(f"point_{i}", MAP_POINTS[i][0], MAP_POINTS[i][1])
+            app.draw_point(MAP_POINTS[i][0], MAP_POINTS[i][1])
         print(len(app.points))
         #TODO: Add roads
 
@@ -52,7 +52,7 @@ class Main:
                         print(f"Left mouse button clicked at {x} - {y}")
                     elif e.button == 3:  # Right mouse button
                         print(f"Right mouse button clicked at {x} - {y}")
-                    app.draw_point("X", x, y)
+                    app.draw_point(x, y)
 
                     end_point = None
                     no_close = True
@@ -66,8 +66,7 @@ class Main:
                             break
                     if start_point is not None and end_point is not None and start_point != end_point:
                         tmp_road = Road(start_point, end_point)
-                        print(start_point.name + " --> " + end_point.name)
-
+                        # print(start_point.name + " --> " + end_point.name)
                     app.dragging = False
 
                 elif e.type == KEYDOWN:
@@ -75,7 +74,7 @@ class Main:
                         #undo
                         if (len(app.points) > 0):
                             app.points.pop()
-                            
+
                     elif e.key == K_c:
                         for i in range(len(POINTS) - 1):
                             x1, y1 = POINTS[i]
