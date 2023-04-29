@@ -1,21 +1,16 @@
 import math
+import os
 from const import *
 from point import Point
 from road import TwoWayRoad
+import pygame
 
 
 class Map:
     def __init__(self):
-        self.img = None
-        
-        points = set()
-        for from_pos, to_pos in ROADS:
-            points.add(from_pos)
-            points.add(to_pos)
-        
-        self.map_points = { str(point): Point("", point) for point in points }
-        self.roads = [ TwoWayRoad(self.map_points[str(from_pos)], self.map_points[str(to_pos)]) for from_pos, to_pos in ROADS ]
-        self.current_route = []
+        self.img = pygame.image.load(os.path.join(f'assets/truc_bach_map.png'))
+        self.map_points = {}
+        self.roads = []
         
     def show_bg(self):
         pass
@@ -69,15 +64,13 @@ class Map:
                     stack = []
                     k = process_to_point
                     while k is not None:
-                        stack.append(k)
+                        for road, point in k.point.adjacents:
+                            if str(point) == str(k.parent):
+                                stack.append(road)
                         k = k.parent
                     
-                    while len(stack) > 0:
-                        print(stack[-1].pos)
-                        stack.pop()
-                    
                     found = True
-                    return
+                    return stack
                 
                 elif not str(to_point) in closed_lst:
                     g_new = current_point.g + road.length
@@ -94,6 +87,7 @@ class Map:
                         
         if not found:
             print("CAN'T FIND ROUTE")
+            return None
     
 class ProcessPoint:
     
@@ -110,6 +104,3 @@ class ProcessPoint:
         
     def __str__(self):
         return f'{self.pos}'
-
-map = Map()
-map.find_route((781, 733), (81, 701))

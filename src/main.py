@@ -58,8 +58,7 @@ class Main:
                     end_point = None
                     no_close = True
                     for point in app.points:
-                        if (x - point.x)**2 + (y -
-                                               point.y)**2 <= POINT_RADIUS**2:
+                        if (x - point.x)**2 + (y - point.y)**2 <= POINT_RADIUS**2:
                             if e.button == 1:
                                 start_point = point
                             elif e.button == 3:

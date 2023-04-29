@@ -65,3 +65,6 @@ class TwoWayRoad(Road):
     def __init__(self, from_point, to_point):
         super().__init__(from_point, to_point)
         self.to_point.adjacents.append((self, from_point))
+
+    def __str__(self):
+        return f'[{self.from_pos.__str__()}, {self.to_pos.__str__()}]'
