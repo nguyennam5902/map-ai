@@ -9,7 +9,7 @@ from road import Road
 class Main:
     def __init__(self):
         init()
-        self.screen = display.set_mode((WIDTH, HEIGHT))
+        self.screen = display.set_mode((MINIMIZED_WINDOW_WIDTH, MINIMIZED_WINDOW_HEIGHT))
         display.set_caption('Map Hanoi')
         self.app = App()
 
@@ -22,10 +22,10 @@ class Main:
         # print(len(app.points))
 
         # Draw roads
-        for i in range(len(PATHS)):
-            # print(f"{PATHS[i][0]} --> {PATHS[i][1]}")
-            tmp_from = Point(PATHS[i][0][0], PATHS[i][0][1])
-            tmp_to = Point(PATHS[i][1][0], PATHS[i][1][1])
+        for i in range(len(TWO_WAY_ROADS)):
+            # print(f"{TWO_WAY_ROADS[i][0]} --> {TWO_WAY_ROADS[i][1]}")
+            tmp_from = Point(TWO_WAY_ROADS[i][0][0], TWO_WAY_ROADS[i][0][1])
+            tmp_to = Point(TWO_WAY_ROADS[i][1][0], TWO_WAY_ROADS[i][1][1])
             app.add_roads(Road(tmp_from, tmp_to))
 
         button_width, button_height = 160, 50
