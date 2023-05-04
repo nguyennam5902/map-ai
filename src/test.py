@@ -36,35 +36,42 @@ class Main:
             for event in pygame.event.get():
                 if event.type == MOUSEBUTTONDOWN:
                     x1, y1 = event.pos
-                    start_pos = list(map.map_points.values())[0]
+                    
+                    start_pos = None
+                    no_point_close = True
                     for point in list(map.map_points.values()):
-                        if point._calc_dist((x1, y1)) < start_pos._calc_dist((x1, y1)):
+                        if point._is_near( (x1, y1) ):
                             start_pos = point
+                            no_point_close = False
+                            break
+
+                    if no_point_close:
+                        start_pos = Point(x1, y1)
+                        map.map_points[str(start_pos)] = start_pos
 
                     self.start_point = start_pos
+
                     self.dragging = True
 
 
                 elif event.type == MOUSEBUTTONUP:
-                    # if self.dragging:
-                    #     x2, y2 = event.pos
-                    #     end_point = None
-                    #     no_point_close = True
-                    #     for point in list(map.map_points.values()):
-                    #         if point._is_near( (x2, y2) ):
-                    #             end_point = point
-                    #             no_point_close = False
-                    #             break
-                    #     if no_point_close:
-                    #         end_point = Point(x2, y2)
-                    #         map.map_points[str(end_point)] = end_point
-                    #     if self.start_point != end_point:
-                    #         road = TwoWayRoad(from_point=self.start_point, to_point=end_point)
-                    #         map.roads.append(road)
-                    # self.dragging = False
+                    if self.dragging:
+                        x2, y2 = event.pos
+                        end_point = None
+                        no_point_close = True
+                        for point in list(map.map_points.values()):
+                            if point._is_near( (x2, y2) ):
+                                end_point = point
+                                no_point_close = False
+                                break
+                        if no_point_close:
+                            end_point = Point(x2, y2)
+                            map.map_points[str(end_point)] = end_point
+                        if self.start_point != end_point:
+                            road = Road(from_point=self.start_point, to_point=end_point)
+                            map.roads.append(road)
+                    self.dragging = False
                     
-                    
-                    pass
 
 
                 elif event.type == KEYDOWN:
@@ -79,12 +86,16 @@ class Main:
                     if event.key == K_r:
                         #print all roads:
                         for road in map.roads:
-                            print(road)
+                            if (not isinstance(road, TwoWayRoad)):
+                                print(road)
 
                     if event.key == K_1:
                         # create map
                         points_set = set([ from_pos for from_pos, to_pos in TWO_WAY_ROADS])
                         for from_pos, to_pos in TWO_WAY_ROADS:
+                            points_set.add(to_pos)
+                        for from_pos, to_pos in ONE_WAY_ROADS:
+                            points_set.add(from_pos)
                             points_set.add(to_pos)
                         
                         for point in points_set:
@@ -93,11 +104,14 @@ class Main:
                         for from_pos, to_pos in TWO_WAY_ROADS:
                             self.map.roads.append(TwoWayRoad( map.map_points[str(from_pos)] , map.map_points[str(to_pos)] ))
 
+                        for from_pos, to_pos in ONE_WAY_ROADS:
+                            self.map.roads.append(Road( map.map_points[str(from_pos)] , map.map_points[str(to_pos)] ))
+
                     if event.key == K_2:
-                        start_pos = (411, 172)
-                        end_pos = (673, 762)
-                        self.route = map.find_route(start_pos, end_pos)
-                                
+                        # start_pos = (411, 172)
+                        # end_pos = (673, 762)
+                        # self.route = map.find_route(start_pos, end_pos)
+                        pass
 
                 elif event.type == QUIT:
                     pygame.quit()
