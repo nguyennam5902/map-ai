@@ -1,5 +1,4 @@
 import math
-from re import S
 import pygame
 
 from const import *
@@ -9,6 +8,11 @@ class Display:
     def __init__(self) -> None:
         self.maximized = True
         self.ratio = MINIMIZED_WINDOW_HEIGHT / MAXIMIZED_WINDOW_HEIGHT
+        self.font = pygame.font.Font('freesansbold.ttf', 32)
+
+        self.toggle_show_defined = False
+        self.mouse_pos = (0, 0)
+        self.close_points = []
 
     def show_background(self, surface, img):
         if self.maximized:
@@ -16,6 +20,22 @@ class Display:
         
         else:
             surface.blit(pygame.transform.scale(img, (MINIMIZED_WINDOW_WIDTH, MINIMIZED_WINDOW_HEIGHT)), (0, 0))
+
+    def show_ui(self, surface):
+        color = COLOR["WHITE"]
+        pygame.draw.rect(surface, color, pygame.Rect(UI_LEFT, UI_TOP, UI_WIDTH, UI_HEIGHT))
+
+        UI_CENTER_x = UI_LEFT + UI_WIDTH // 2
+        UI_CENTER_y = UI_TOP + UI_HEIGHT // 2
+
+        text = self.font.render( str(self.mouse_pos) , True, (0, 0, 0), (255, 255, 255))
+
+        textRect = text.get_rect()
+        textRect.center = (UI_CENTER_x, UI_CENTER_y)
+
+        surface.blit(text, textRect)
+
+
 
     def draw_points(self, surface, points):
         if self.maximized:
@@ -88,13 +108,12 @@ class Display:
             for road in roads:
                 start_pos = road.from_pos
                 end_pos = road.to_pos
-                #pygame.draw.line(surface, color, start_pos, end_pos, width)
-                self.draw_arrow(surface, start_pos, end_pos, color)
+                pygame.draw.line(surface, color, start_pos, end_pos, width)
+                # self.draw_arrow(surface, start_pos, end_pos, color)
         else:
             for road in roads:
                 x1, y1 = road.from_pos
                 x2, y2 = road.to_pos
                 start_pos = ( self.ratio * x1, self.ratio * y1)
                 end_pos = (self.ratio * x2, self.ratio * y2)
-                #pygame.draw.line(surface, color, start_pos, end_pos, width)
-                self.draw_arrows(surface, start_pos, end_pos, color)
+                pygame.draw.line(surface, color, start_pos, end_pos, width)

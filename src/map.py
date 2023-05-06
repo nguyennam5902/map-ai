@@ -11,15 +11,6 @@ class Map:
         self.img = pygame.image.load(os.path.join(f'assets/truc_bach_map.png'))
         self.map_points = {}
         self.roads = []
-        
-    def show_bg(self):
-        pass
-    
-    def show_definedRoad(self):
-        pass
-    
-    def show_definedPoint(self):
-        pass
     
     def find_route(self, start_pos, end_pos):
             
