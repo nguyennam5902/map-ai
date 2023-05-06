@@ -26,21 +26,43 @@ class Display:
                     img, (MINIMIZED_WINDOW_WIDTH, MINIMIZED_WINDOW_HEIGHT)),
                 (0, 0))
 
-    def show_ui(self, surface):
+    def show_ui(self, surface: pygame.Surface, start_point: Point,
+                end_point: Point):
         color = COLOR["WHITE"]
         pygame.draw.rect(surface, color,
                          pygame.Rect(UI_LEFT, UI_TOP, UI_WIDTH, UI_HEIGHT))
 
         UI_CENTER_x = UI_LEFT + UI_WIDTH // 2
         UI_CENTER_y = UI_TOP + UI_HEIGHT // 2
+        start_icon = pygame.transform.scale(
+            pygame.image.load("assets/start.png"), (64, 64))
+        start_icon_rect = start_icon.get_rect()
+        start_icon_rect.x = UI_CENTER_x - 200
+        start_icon_rect.y = UI_CENTER_y - 400
 
-        text = self.font.render(str(self.mouse_pos), True, (0, 0, 0),
-                                (255, 255, 255))
+        end_icon = pygame.transform.scale(
+            pygame.image.load("assets/destination.png"), (64, 64))
+        end_icon_rect = end_icon.get_rect()
+        end_icon_rect.x = UI_CENTER_x - 200
+        end_icon_rect.y = UI_CENTER_y - 300
 
-        textRect = text.get_rect()
-        textRect.center = (UI_CENTER_x, UI_CENTER_y)
+        surface.blit(start_icon, start_icon_rect)
+        surface.blit(end_icon, end_icon_rect)
 
-        surface.blit(text, textRect)
+        if start_point is not None:
+            start_location = self.font.render(str(start_point), True, 'black',
+                                              'white')
+            start_location_rect = start_location.get_rect()
+            start_location_rect.x = UI_CENTER_x - 120
+            start_location_rect.y = UI_CENTER_y - 380
+            surface.blit(start_location, start_location_rect)
+        if end_point is not None:
+            end_location = self.font.render(str(end_point), True, 'red',
+                                            'white')
+            end_location_rect = end_location.get_rect()
+            end_location_rect.x = UI_CENTER_x - 120
+            end_location_rect.y = UI_CENTER_y - 280
+            surface.blit(end_location, end_location_rect)
 
     def show_locations(self, surface: pygame.Surface, start_point: Point,
                        end_point: Point):

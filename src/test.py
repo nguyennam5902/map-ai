@@ -31,7 +31,7 @@ class Main:
             display.draw_points(screen, list(map.map_points.values()))
             display.draw_roads(screen, map.roads)
             display.draw_found_route(screen, self.route)
-            display.show_ui(screen)
+            display.show_ui(screen, start_point, end_point)
             display.show_locations(screen, start_point, end_point)
             pygame.display.flip()
 
@@ -62,7 +62,7 @@ class Main:
 
                 elif event.type == MOUSEBUTTONUP:
                     x, y = event.pos
-                    if x > 16 and y > 32:
+                    if UI_LEFT > x > 16 and y > 32:
                         if event.button == 1:  # Left mouse button
                             print(f"Left mouse button clicked at {x} - {y}")
                             start_point = (x - 16, y - 32)
