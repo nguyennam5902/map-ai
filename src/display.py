@@ -2,7 +2,9 @@ import math
 import pygame
 
 from const import *
+from point import Point
 from road import TwoWayRoad
+
 
 class Display:
     def __init__(self) -> None:
@@ -17,25 +19,39 @@ class Display:
     def show_background(self, surface, img):
         if self.maximized:
             surface.blit(img, (0, 0))
-        
+
         else:
-            surface.blit(pygame.transform.scale(img, (MINIMIZED_WINDOW_WIDTH, MINIMIZED_WINDOW_HEIGHT)), (0, 0))
+            surface.blit(
+                pygame.transform.scale(
+                    img, (MINIMIZED_WINDOW_WIDTH, MINIMIZED_WINDOW_HEIGHT)),
+                (0, 0))
 
     def show_ui(self, surface):
         color = COLOR["WHITE"]
-        pygame.draw.rect(surface, color, pygame.Rect(UI_LEFT, UI_TOP, UI_WIDTH, UI_HEIGHT))
+        pygame.draw.rect(surface, color,
+                         pygame.Rect(UI_LEFT, UI_TOP, UI_WIDTH, UI_HEIGHT))
 
         UI_CENTER_x = UI_LEFT + UI_WIDTH // 2
         UI_CENTER_y = UI_TOP + UI_HEIGHT // 2
 
-        text = self.font.render( str(self.mouse_pos) , True, (0, 0, 0), (255, 255, 255))
+        text = self.font.render(str(self.mouse_pos), True, (0, 0, 0),
+                                (255, 255, 255))
 
         textRect = text.get_rect()
         textRect.center = (UI_CENTER_x, UI_CENTER_y)
 
         surface.blit(text, textRect)
 
-
+    def show_locations(self, surface: pygame.Surface, start_point: Point,
+                       end_point: Point):
+        start_icon = pygame.transform.scale(
+            pygame.image.load("assets/start.png"), (32, 32))
+        end_icon = pygame.transform.scale(
+            pygame.image.load("assets/destination.png"), (32, 32))
+        if start_point:
+            surface.blit(start_icon, start_point)
+        if end_point:
+            surface.blit(end_icon, end_point)
 
     def draw_points(self, surface, points):
         if self.maximized:
@@ -50,7 +66,6 @@ class Display:
                 center = (point.x * self.ratio, point.y * self.ratio)
                 radius = POINT_RADIUS
                 pygame.draw.circle(surface, color, center, radius)
-            
 
     def draw_roads(self, surface, roads):
         color = COLOR["BLACK"]
@@ -69,7 +84,7 @@ class Display:
             for road in roads:
                 x1, y1 = road.from_pos
                 x2, y2 = road.to_pos
-                start_pos = ( self.ratio * x1, self.ratio * y1)
+                start_pos = (self.ratio * x1, self.ratio * y1)
                 end_pos = (self.ratio * x2, self.ratio * y2)
                 pygame.draw.line(surface, color, start_pos, end_pos, width)
 
@@ -87,15 +102,16 @@ class Display:
         arrow_width = 10
         arrow_len = 15
 
-        arrow_points = [(0, 0),
-                        (-arrow_len, -arrow_width / 2),
+        arrow_points = [(0, 0), (-arrow_len, -arrow_width / 2),
                         (-arrow_len, arrow_width / 2)]
-        
+
         rotated_arrow_points = []
 
         for point in arrow_points:
-            rotated_x = point[0] * math.cos(math.radians(angle)) - point[1] * math.sin(math.radians(angle))
-            rotated_y = point[0] * math.sin(math.radians(angle)) + point[1] * math.cos(math.radians(angle))
+            rotated_x = point[0] * math.cos(
+                math.radians(angle)) - point[1] * math.sin(math.radians(angle))
+            rotated_y = point[0] * math.sin(
+                math.radians(angle)) + point[1] * math.cos(math.radians(angle))
             rotated_arrow_points.append((x2 + rotated_x, y2 + rotated_y))
 
         pygame.draw.polygon(surface, color, rotated_arrow_points)
@@ -114,6 +130,6 @@ class Display:
             for road in roads:
                 x1, y1 = road.from_pos
                 x2, y2 = road.to_pos
-                start_pos = ( self.ratio * x1, self.ratio * y1)
+                start_pos = (self.ratio * x1, self.ratio * y1)
                 end_pos = (self.ratio * x2, self.ratio * y2)
                 pygame.draw.line(surface, color, start_pos, end_pos, width)
