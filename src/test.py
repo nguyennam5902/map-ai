@@ -64,13 +64,17 @@ class Main:
                     x, y = event.pos
                     if UI_LEFT > x > 16 and y > 32:
                         if event.button == 1:  # Left mouse button
-                            print(f"Left mouse button clicked at {x} - {y}")
-                            start_point = (x - 16, y - 32)
+                            # print(f"Left mouse button clicked at {x} - {y}")
+                            start_point = self.choose_point_from_mouse_click(
+                                (x, y))
 
                         elif event.button == 3:  # Right mouse button
-                            print(f"Right mouse button clicked at {x} - {y}")
-                            end_point = (x - 16, y - 32)
-
+                            # print(f"Right mouse button clicked at {x} - {y}")
+                            end_point = self.choose_point_from_mouse_click(
+                                (x, y))
+                            print
+                    if start_point and end_point:
+                        print(f'{start_point} --> {end_point}')
                     # if self.dragging:
                     #     x2, y2 = event.pos
                     #     end_point = None
@@ -132,13 +136,36 @@ class Main:
                                      map.map_points[str(to_pos)]))
 
                     if event.key == K_2:
-                        start_pos = (35, 825)
-                        end_pos = (673, 762)
+                        # Terminal: (41, 837) --> (689, 748)
+                        start_pos = start_point
+                        end_pos = end_point
                         self.route = map.find_route(start_pos, end_pos)
 
                 elif event.type == QUIT:
                     pygame.quit()
                     sys.exit()
+
+    def choose_point_from_mouse_click(self, start_point):
+        nearest_road_from = None
+        nearest_road_to = None
+        min_dist = 999
+        for road in self.map.roads:
+            # print(road.__class__.__name__)
+            if road._is_look(start_point):
+                tmp_dist = road._calc_dist(start_point)
+                if tmp_dist < min_dist:
+                    nearest_road_from = road.from_point
+                    nearest_road_to = road.to_point
+                    min_dist = tmp_dist
+        if nearest_road_to and nearest_road_from:
+            dist_from, dist_to = nearest_road_from._calc_dist(
+                start_point), nearest_road_to._calc_dist(start_point)
+            if dist_from < dist_to:
+                start_point = (nearest_road_from.x, nearest_road_from.y)
+            else:
+                start_point = (nearest_road_to.x, nearest_road_to.y)
+
+        return start_point
 
 
 main = Main()
