@@ -3,7 +3,7 @@ import pygame
 
 from const import *
 from point import Point
-from road import TwoWayRoad
+from road import Road, TwoWayRoad
 
 
 class Display:
@@ -71,9 +71,10 @@ class Display:
         end_icon = pygame.transform.scale(
             pygame.image.load("assets/destination.png"), (32, 32))
         if start_point:
-            surface.blit(start_icon, start_point)
+            surface.blit(start_icon,
+                         (start_point[0] - 16, start_point[1] - 32))
         if end_point:
-            surface.blit(end_icon, end_point)
+            surface.blit(end_icon, (end_point[0] - 16, end_point[1] - 32))
 
     def draw_points(self, surface, points):
         if self.maximized:
@@ -138,7 +139,7 @@ class Display:
 
         pygame.draw.polygon(surface, color, rotated_arrow_points)
 
-    def draw_found_route(self, surface, roads):
+    def draw_found_route(self, surface: pygame.Surface, roads: list[Road]):
         if roads is None: return
         color = COLOR["RED"]
         width = ROAD_WIDTH
