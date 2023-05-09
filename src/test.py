@@ -137,9 +137,8 @@ class Main:
 
                     if event.key == K_2:
                         # Terminal: (41, 837) --> (689, 748)
-                        start_pos = start_point
-                        end_pos = end_point
-                        self.route = map.find_route(start_pos, end_pos)
+                        if start_point and end_point:
+                            self.route = map.find_route(start_point, end_point)
 
                 elif event.type == QUIT:
                     pygame.quit()
