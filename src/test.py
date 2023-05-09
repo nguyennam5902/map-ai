@@ -72,9 +72,6 @@ class Main:
                             # print(f"Right mouse button clicked at {x} - {y}")
                             end_point = self.choose_point_from_mouse_click(
                                 (x, y))
-                            print
-                    if start_point and end_point:
-                        print(f'{start_point} --> {end_point}')
                     # if self.dragging:
                     #     x2, y2 = event.pos
                     #     end_point = None
