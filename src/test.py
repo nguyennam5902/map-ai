@@ -63,6 +63,7 @@ class Main:
                 elif event.type == MOUSEBUTTONUP:
                     x, y = event.pos
                     if UI_LEFT > x > 16 and y > 32:
+                        self.route = []
                         if event.button == 1:  # Left mouse button
                             # print(f"Left mouse button clicked at {x} - {y}")
                             start_point = self.choose_point_from_mouse_click(
@@ -141,12 +142,9 @@ class Main:
                     pygame.quit()
                     sys.exit()
 
-    def choose_point_from_mouse_click(self, start_point):
-        nearest_road_from = None
-        nearest_road_to = None
-        min_dist = 999
+    def choose_point_from_mouse_click(self, start_point: tuple[int, int]):
+        nearest_road_from, nearest_road_to, min_dist = None, None, 999
         for road in self.map.roads:
-            # print(road.__class__.__name__)
             if road._is_look(start_point):
                 tmp_dist = road._calc_dist(start_point)
                 if tmp_dist < min_dist:
