@@ -13,3 +13,6 @@ PIP hệ thống quản lý gói thư viện đối các module viết bằng Py
 - Tham khảo cách cài đặt numpy: https://techcult.com/how-to-install-numpy/
 - Tiếp tục cài thêm thư viện pygame
 ` pip install pygame `
+
+## Chạy chương trình
+Vào thư mục gốc của chương trình, gõ lệnh trên terminal ` python src/test.py `
