@@ -33,6 +33,14 @@ class Main:
             display.draw_found_route(screen, self.route)
             display.show_ui(screen, start_point, end_point)
             display.show_locations(screen, start_point, end_point)
+            # Draw the button on the screen with the background color
+            button_rect = pygame.draw.rect(screen, pygame.Color("blue"),
+                                           (UI_LEFT + 150, 250, 150, 50))
+            text_surface = pygame.font.Font(None,
+                                            36).render("Find route", True,
+                                                       pygame.Color("white"))
+            screen.blit(text_surface,
+                        text_surface.get_rect(center=button_rect.center))
             pygame.display.flip()
 
             for event in pygame.event.get():
@@ -47,49 +55,20 @@ class Main:
                 if event.type == MOUSEBUTTONDOWN:
                     x1, y1 = event.pos
 
-                    # start_pos = None
-                    # no_point_close = True
-                    # for point in list(map.map_points.values()):
-                    #     if point._is_near( (x1, y1) ):
-                    #         start_pos = point
-                    #         no_point_close = False
-                    #         break
-                    # if no_point_close:
-                    #     start_pos = Point(x1, y1)
-                    #     map.map_points[str(start_pos)] = start_pos
-                    # self.start_point = start_pos
-                    # self.dragging = True
-
                 elif event.type == MOUSEBUTTONUP:
                     x, y = event.pos
                     if UI_LEFT > x > 16 and y > 32:
                         self.route = []
                         if event.button == 1:  # Left mouse button
-                            # print(f"Left mouse button clicked at {x} - {y}")
                             start_point = self.choose_point_from_mouse_click(
                                 (x, y))
 
                         elif event.button == 3:  # Right mouse button
-                            # print(f"Right mouse button clicked at {x} - {y}")
                             end_point = self.choose_point_from_mouse_click(
                                 (x, y))
-                    # if self.dragging:
-                    #     x2, y2 = event.pos
-                    #     end_point = None
-                    #     no_point_close = True
-                    #     for point in list(map.map_points.values()):
-                    #         if point._is_near( (x2, y2) ):
-                    #             end_point = point
-                    #             no_point_close = False
-                    #             break
-                    #     if no_point_close:
-                    #         end_point = Point(x2, y2)
-                    #         map.map_points[str(end_point)] = end_point
-                    #     if self.start_point != end_point:
-                    #         road = Road(from_point=self.start_point, to_point=end_point)
-                    #         map.roads.append(road)
-                    # self.dragging = False
-                    pass
+                    if button_rect.collidepoint((x, y)):
+                        if start_point and end_point:
+                            self.route = map.find_route(start_point, end_point)
 
                 elif event.type == KEYDOWN:
                     if event.key == K_s:
