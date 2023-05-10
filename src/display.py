@@ -11,15 +11,22 @@ class Display:
         self.maximized = True
         self.ratio = MINIMIZED_WINDOW_HEIGHT / MAXIMIZED_WINDOW_HEIGHT
         self.font = pygame.font.Font('freesansbold.ttf', 32)
+        self.big_start_icon = pygame.transform.scale(
+            pygame.image.load("assets/start.png"), (64, 64))
+        self.big_end_icon = pygame.transform.scale(
+            pygame.image.load("assets/destination.png"), (64, 64))
+        self.small_start_icon = pygame.transform.scale(
+            pygame.image.load("assets/start.png"), (32, 32))
+        self.small_end_icon = pygame.transform.scale(
+            pygame.image.load("assets/destination.png"), (32, 32))
 
         self.toggle_show_defined = False
         self.mouse_pos = (0, 0)
         self.close_points = []
 
-    def show_background(self, surface, img):
+    def show_background(self, surface: pygame.Surface, img: pygame.Surface):
         if self.maximized:
             surface.blit(img, (0, 0))
-
         else:
             surface.blit(
                 pygame.transform.scale(
@@ -34,29 +41,25 @@ class Display:
 
         UI_CENTER_x = UI_LEFT + UI_WIDTH // 2
         UI_CENTER_y = UI_TOP + UI_HEIGHT // 2
-        start_icon = pygame.transform.scale(
-            pygame.image.load("assets/start.png"), (64, 64))
-        start_icon_rect = start_icon.get_rect()
+        start_icon_rect = self.big_start_icon.get_rect()
         start_icon_rect.x = UI_CENTER_x - 200
         start_icon_rect.y = UI_CENTER_y - 400
 
-        end_icon = pygame.transform.scale(
-            pygame.image.load("assets/destination.png"), (64, 64))
-        end_icon_rect = end_icon.get_rect()
+        end_icon_rect = self.big_end_icon.get_rect()
         end_icon_rect.x = UI_CENTER_x - 200
         end_icon_rect.y = UI_CENTER_y - 300
 
-        surface.blit(start_icon, start_icon_rect)
-        surface.blit(end_icon, end_icon_rect)
+        surface.blit(self.big_start_icon, start_icon_rect)
+        surface.blit(self.big_end_icon, end_icon_rect)
 
-        if start_point is not None:
+        if start_point:
             start_location = self.font.render(str(start_point), True, 'black',
                                               'white')
             start_location_rect = start_location.get_rect()
             start_location_rect.x = UI_CENTER_x - 120
             start_location_rect.y = UI_CENTER_y - 380
             surface.blit(start_location, start_location_rect)
-        if end_point is not None:
+        if end_point:
             end_location = self.font.render(str(end_point), True, 'red',
                                             'white')
             end_location_rect = end_location.get_rect()
@@ -66,17 +69,14 @@ class Display:
 
     def show_locations(self, surface: pygame.Surface, start_point: Point,
                        end_point: Point):
-        start_icon = pygame.transform.scale(
-            pygame.image.load("assets/start.png"), (32, 32))
-        end_icon = pygame.transform.scale(
-            pygame.image.load("assets/destination.png"), (32, 32))
         if start_point:
-            surface.blit(start_icon,
+            surface.blit(self.small_start_icon,
                          (start_point[0] - 16, start_point[1] - 32))
         if end_point:
-            surface.blit(end_icon, (end_point[0] - 16, end_point[1] - 32))
+            surface.blit(self.small_end_icon,
+                         (end_point[0] - 16, end_point[1] - 32))
 
-    def draw_points(self, surface, points):
+    def draw_points(self, surface: pygame.Surface, points: list[Point]):
         if self.maximized:
             for point in points:
                 color = COLOR["BLACK"]
@@ -90,7 +90,7 @@ class Display:
                 radius = POINT_RADIUS
                 pygame.draw.circle(surface, color, center, radius)
 
-    def draw_roads(self, surface, roads):
+    def draw_roads(self, surface: pygame.Surface, roads: list[Road]):
         color = COLOR["BLACK"]
         width = ROAD_WIDTH
         if self.maximized:
@@ -111,7 +111,11 @@ class Display:
                 end_pos = (self.ratio * x2, self.ratio * y2)
                 pygame.draw.line(surface, color, start_pos, end_pos, width)
 
-    def draw_arrow(self, surface, start_pos, end_pos, color=COLOR["BLACK"]):
+    def draw_arrow(self,
+                   surface: pygame.Surface,
+                   start_pos: tuple,
+                   end_pos: tuple,
+                   color=COLOR["BLACK"]):
         width = ROAD_WIDTH
 
         x1, y1 = start_pos
