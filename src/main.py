@@ -3,6 +3,7 @@ import os
 import pygame
 from pygame.locals import *
 from const import *
+from initialize import *
 from display import Display
 from map import Map
 from point import Point
@@ -30,8 +31,8 @@ class Main:
         start_point, end_point = self.start_point, self.end_point
         while True:
             display.show_background(screen, map.img)
-            #display.draw_points(screen, list(map.map_points.values()))
-            #display.draw_roads(screen, map.roads)
+            display.draw_points(screen, list(map.map_points.values()))
+            display.draw_roads(screen, map.roads)
             display.draw_found_route(screen, self.route)
             display.show_ui(screen, start_point, end_point)
             display.show_locations(screen, start_point, end_point)
