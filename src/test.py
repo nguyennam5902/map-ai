@@ -1,6 +1,7 @@
 import sys
 import os
 import pygame
+import time
 from pygame.locals import *
 from const import *
 from display import Display
@@ -26,12 +27,14 @@ class Main:
         map = self.map
         display = self.display
         start_point, end_point = None, None
+        start_time, end_time = 0.0, 0.0
         while True:
             display.show_background(screen, map.img)
             display.draw_points(screen, list(map.map_points.values()))
             display.draw_roads(screen, map.roads)
             display.draw_found_route(screen, self.route)
-            display.show_ui(screen, start_point, end_point)
+            display.show_ui(screen, start_point, end_point, start_time,
+                            end_time)
             display.show_locations(screen, start_point, end_point)
             # Draw the button on the screen with the background color
             button_rect = pygame.draw.rect(screen, pygame.Color("blue"),
@@ -42,19 +45,15 @@ class Main:
             screen.blit(text_surface,
                         text_surface.get_rect(center=button_rect.center))
             pygame.display.flip()
-
             for event in pygame.event.get():
-
                 if event.type == MOUSEMOTION:
                     display.mouse_pos = event.pos
                     display.close_points = [
                         map.map_points[key].pos for key in map.map_points
                         if map.map_points[key]._is_near(event.pos)
                     ]
-
                 if event.type == MOUSEBUTTONDOWN:
                     x1, y1 = event.pos
-
                 elif event.type == MOUSEBUTTONUP:
                     x, y = event.pos
                     if UI_LEFT > x > 16 and y > 32:
@@ -68,7 +67,9 @@ class Main:
                                 (x, y))
                     if button_rect.collidepoint((x, y)):
                         if start_point and end_point:
+                            start_time = time.time()
                             self.route = map.find_route(start_point, end_point)
+                            end_time = time.time()
 
                 elif event.type == KEYDOWN:
                     if event.key == K_s:
@@ -137,7 +138,6 @@ class Main:
                 start_point = (nearest_road_from.x, nearest_road_from.y)
             else:
                 start_point = (nearest_road_to.x, nearest_road_to.y)
-
         return start_point
 
 

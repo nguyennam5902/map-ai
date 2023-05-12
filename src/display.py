@@ -34,7 +34,7 @@ class Display:
                 (0, 0))
 
     def show_ui(self, surface: pygame.Surface, start_point: Point,
-                end_point: Point):
+                end_point: Point, start_time: float, end_time: float):
         color = COLOR["WHITE"]
         pygame.draw.rect(surface, color,
                          pygame.Rect(UI_LEFT, UI_TOP, UI_WIDTH, UI_HEIGHT))
@@ -49,8 +49,16 @@ class Display:
         end_icon_rect.x = UI_CENTER_x - 200
         end_icon_rect.y = UI_CENTER_y - 300
 
+        search_time = self.font.render(
+            "Search time: {:.2f} ms".format(1000 * (end_time - start_time)),
+            True, 'black', 'white')
+        search_time_rect = search_time.get_rect()
+        search_time_rect.x = UI_CENTER_x - 200
+        search_time_rect.y = UI_CENTER_y - 100
+
         surface.blit(self.big_start_icon, start_icon_rect)
         surface.blit(self.big_end_icon, end_icon_rect)
+        surface.blit(search_time, search_time_rect)
 
         if start_point:
             start_location = self.font.render(str(start_point), True, 'black',
@@ -90,7 +98,10 @@ class Display:
                 radius = POINT_RADIUS
                 pygame.draw.circle(surface, color, center, radius)
 
-    def draw_roads(self, surface: pygame.Surface, roads: list[Road], color=COLOR["BLACK"]):
+    def draw_roads(self,
+                   surface: pygame.Surface,
+                   roads: list[Road],
+                   color=COLOR["BLACK"]):
         width = ROAD_WIDTH
         if self.maximized:
             for road in roads:
