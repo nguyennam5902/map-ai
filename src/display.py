@@ -90,8 +90,7 @@ class Display:
                 radius = POINT_RADIUS
                 pygame.draw.circle(surface, color, center, radius)
 
-    def draw_roads(self, surface: pygame.Surface, roads: list[Road]):
-        color = COLOR["BLACK"]
+    def draw_roads(self, surface: pygame.Surface, roads: list[Road], color=COLOR["BLACK"]):
         width = ROAD_WIDTH
         if self.maximized:
             for road in roads:
@@ -148,11 +147,8 @@ class Display:
         color = COLOR["RED"]
         width = ROAD_WIDTH
         if self.maximized:
-            for road in roads:
-                start_pos = road.from_pos
-                end_pos = road.to_pos
-                pygame.draw.line(surface, color, start_pos, end_pos, width)
-                # self.draw_arrow(surface, start_pos, end_pos, color)
+            self.draw_roads(surface, roads, color)
+            # self.draw_arrow(surface, start_pos, end_pos, color)
         else:
             for road in roads:
                 x1, y1 = road.from_pos

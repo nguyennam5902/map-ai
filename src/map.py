@@ -50,15 +50,18 @@ class Map:
                 process_to_point = process_point[str(to_point)]
                 current_f = process_to_point.f
                 if process_to_point.pos == end_pos:
+                    # FOUND
                     process_to_point.parent = current_point
                     
                     stack = []
-                    k = process_to_point
-                    while k is not None:
-                        for road, point in k.point.adjacents:
-                            if str(point) == str(k.parent):
+                    child_node = process_to_point
+                    parent_node = child_node.parent
+                    while parent_node is not None:
+                        for road, point in parent_node.point.adjacents:
+                            if str(point) == str(child_node):
                                 stack.append(road)
-                        k = k.parent
+                        child_node = parent_node
+                        parent_node = parent_node.parent
                     
                     found = True
                     return stack
