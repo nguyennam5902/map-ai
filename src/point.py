@@ -8,9 +8,10 @@ class Point:
         #receive pos as (x,y)
         # self.name = name
         if pos2 is None:
+            from road import Road
             self.pos = pos
             self.x, self.y = pos
-            self.adjacents = []  #(road, adj_point)
+            self.adjacents: list[tuple[Road, Point]] = []  #(road, adj_point)
 
         #receive x, y
         else:

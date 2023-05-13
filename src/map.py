@@ -2,7 +2,7 @@ import math
 import os
 from const import *
 from point import Point
-from road import TwoWayRoad
+from road import Road, TwoWayRoad
 import pygame
 
 
@@ -12,7 +12,7 @@ class Map:
         self.map_points = {}
         self.roads = []
 
-    def find_route(self, start_pos, end_pos):
+    def find_route(self, start_pos, end_pos) -> list[Road]:
 
         process_point: dict[str, ProcessPoint] = {}
         for key in self.map_points:
@@ -57,9 +57,9 @@ class Map:
                     child_node = process_to_point
                     parent_node = child_node.parent
                     while parent_node is not None:
-                        for road, point in parent_node.point.adjacents:
+                        for road_, point in parent_node.point.adjacents:
                             if str(point) == str(child_node):
-                                stack.append(road)
+                                stack.append(road_)
                         child_node = parent_node
                         parent_node = parent_node.parent
 
@@ -80,7 +80,7 @@ class Map:
                         process_to_point.parent = current_point
 
         if not found:
-            print("CAN'T FIND ROUTE")
+            # print("CAN'T FIND ROUTE")
             return None
 
 
@@ -91,7 +91,7 @@ class ProcessPoint:
         self.f = INFINITY
         self.g = INFINITY
         self.h = INFINITY
-        self.parent = None
+        self.parent: ProcessPoint = None
 
     def _calc_dist(self, pos):
         return math.dist(self.pos, pos)
