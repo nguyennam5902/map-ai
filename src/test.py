@@ -1,6 +1,7 @@
 import sys
 import os
 import pygame
+import time
 from pygame.locals import *
 from const import *
 from display import Display
@@ -25,13 +26,15 @@ class Main:
         screen = self.screen
         map = self.map
         display = self.display
-        start_point, end_point = None, None
+        start_point, end_point, is_click = None, None, False
+        start_time, end_time, route_length, ratio = 0.0, 0.0, 0.0, 1.12
         while True:
             display.show_background(screen, map.img)
             display.draw_points(screen, list(map.map_points.values()))
             display.draw_roads(screen, map.roads)
             display.draw_found_route(screen, self.route)
-            display.show_ui(screen, start_point, end_point)
+            display.show_ui(screen, start_point, end_point, start_time,
+                            end_time, route_length, is_click)
             display.show_locations(screen, start_point, end_point)
             # Draw the button on the screen with the background color
             button_rect = pygame.draw.rect(screen, pygame.Color("blue"),
@@ -42,33 +45,37 @@ class Main:
             screen.blit(text_surface,
                         text_surface.get_rect(center=button_rect.center))
             pygame.display.flip()
-
             for event in pygame.event.get():
-
                 if event.type == MOUSEMOTION:
                     display.mouse_pos = event.pos
                     display.close_points = [
                         map.map_points[key].pos for key in map.map_points
                         if map.map_points[key]._is_near(event.pos)
                     ]
-
                 if event.type == MOUSEBUTTONDOWN:
                     x1, y1 = event.pos
-
                 elif event.type == MOUSEBUTTONUP:
                     x, y = event.pos
+                    is_click = False
                     if UI_LEFT > x > 16 and y > 32:
                         self.route = []
+                        tmp_point = self.choose_point_from_mouse_click(
+                            (x, y))
                         if event.button == 1:  # Left mouse button
-                            start_point = self.choose_point_from_mouse_click(
-                                (x, y))
-
+                            if tmp_point != end_point:
+                                start_point = tmp_point
                         elif event.button == 3:  # Right mouse button
-                            end_point = self.choose_point_from_mouse_click(
-                                (x, y))
+                            if tmp_point != start_point:
+                                end_point = tmp_point
                     if button_rect.collidepoint((x, y)):
+                        is_click = True
                         if start_point and end_point:
+                            start_time = time.time()
                             self.route = map.find_route(start_point, end_point)
+                            end_time = time.time()
+                            route_length = ratio * sum([
+                                road.length for road in self.route
+                            ]) if self.route else 0.0
 
                 elif event.type == KEYDOWN:
                     if event.key == K_s:
@@ -112,11 +119,6 @@ class Main:
                                 Road(map.map_points[str(from_pos)],
                                      map.map_points[str(to_pos)]))
 
-                    if event.key == K_2:
-                        # Terminal: (41, 837) --> (689, 748)
-                        if start_point and end_point:
-                            self.route = map.find_route(start_point, end_point)
-
                 elif event.type == QUIT:
                     pygame.quit()
                     sys.exit()
@@ -137,7 +139,6 @@ class Main:
                 start_point = (nearest_road_from.x, nearest_road_from.y)
             else:
                 start_point = (nearest_road_to.x, nearest_road_to.y)
-
         return start_point
 
 

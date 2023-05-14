@@ -34,7 +34,8 @@ class Display:
                 (0, 0))
 
     def show_ui(self, surface: pygame.Surface, start_point: Point,
-                end_point: Point):
+                end_point: Point, start_time: float, end_time: float,
+                route_length: float, is_click: bool):
         color = COLOR["WHITE"]
         pygame.draw.rect(surface, color,
                          pygame.Rect(UI_LEFT, UI_TOP, UI_WIDTH, UI_HEIGHT))
@@ -49,19 +50,41 @@ class Display:
         end_icon_rect.x = UI_CENTER_x - 200
         end_icon_rect.y = UI_CENTER_y - 300
 
+        time_text = ""
+        if is_click:
+            time_text = "Search time: {:.2f} ms".format(
+                1000 * (end_time - start_time))
+        search_time = self.font.render(time_text, True, 'black', 'white')
+        search_time_rect = search_time.get_rect()
+        search_time_rect.x = UI_CENTER_x - 200
+        search_time_rect.y = UI_CENTER_y - 100
+
+        length_text, length_text_font = "", 'black'
+        if is_click:
+            if start_point and end_point:
+                length_text = "Length: {:.2f} m".format(
+                    route_length) if route_length else "PATH NOT FOUND"
+        if not route_length:
+            length_text_font = 'red'
+        route_length_text = self.font.render(length_text, True,
+                                             length_text_font)
+        route_length_rect = route_length_text.get_rect()
+        route_length_rect.x = UI_CENTER_x - 200
+        route_length_rect.y = UI_CENTER_y
+
         surface.blit(self.big_start_icon, start_icon_rect)
         surface.blit(self.big_end_icon, end_icon_rect)
+        surface.blit(search_time, search_time_rect)
+        surface.blit(route_length_text, route_length_rect)
 
         if start_point:
-            start_location = self.font.render(str(start_point), True, 'black',
-                                              'white')
+            start_location = self.font.render(str(start_point), True, 'black')
             start_location_rect = start_location.get_rect()
             start_location_rect.x = UI_CENTER_x - 120
             start_location_rect.y = UI_CENTER_y - 380
             surface.blit(start_location, start_location_rect)
         if end_point:
-            end_location = self.font.render(str(end_point), True, 'red',
-                                            'white')
+            end_location = self.font.render(str(end_point), True, 'red')
             end_location_rect = end_location.get_rect()
             end_location_rect.x = UI_CENTER_x - 120
             end_location_rect.y = UI_CENTER_y - 280
@@ -90,7 +113,10 @@ class Display:
                 radius = POINT_RADIUS
                 pygame.draw.circle(surface, color, center, radius)
 
-    def draw_roads(self, surface: pygame.Surface, roads: list[Road], color=COLOR["BLACK"]):
+    def draw_roads(self,
+                   surface: pygame.Surface,
+                   roads: list[Road],
+                   color=COLOR["BLACK"]):
         width = ROAD_WIDTH
         if self.maximized:
             for road in roads:
