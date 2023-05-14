@@ -72,9 +72,10 @@ class Main:
                         if start_point and end_point:
                             start_time = time.time()
                             self.route = map.find_route(start_point, end_point)
+                            self.route_filter()
                             end_time = time.time()
-                            # for i in range(len(self.route) - 1, -1, -1):
-                            #     print(f"{self.route[i].from_pos} --> {self.route[i].to_pos}")
+                            # for road in self.route.__reversed__():
+                            #     print(road)
                             route_length = ratio * sum([
                                 road.length for road in self.route
                             ]) if self.route else 0.0
@@ -124,6 +125,16 @@ class Main:
                 elif event.type == QUIT:
                     pygame.quit()
                     sys.exit()
+
+    def route_filter(self):
+        route_dict: dict[str, Road] = {}
+        for road in self.route:
+            tmp_key = str(road)
+            try:
+                _ = route_dict[tmp_key]
+            except KeyError:
+                route_dict[tmp_key] = road
+        self.route = route_dict.values()
 
     def choose_point_from_mouse_click(self, start_point: tuple[int, int]):
         nearest_road_from, nearest_road_to, min_dist = None, None, 999
