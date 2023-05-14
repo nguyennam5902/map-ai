@@ -5,6 +5,7 @@ import time
 from pygame.locals import *
 from const import *
 from display import Display
+from initialize import *
 from map import Map
 from point import Point
 from road import Road, TwoWayRoad
@@ -59,8 +60,7 @@ class Main:
                     is_click = False
                     if UI_LEFT > x > 16 and y > 32:
                         self.route = []
-                        tmp_point = self.choose_point_from_mouse_click(
-                            (x, y))
+                        tmp_point = self.choose_point_from_mouse_click((x, y))
                         if event.button == 1:  # Left mouse button
                             if tmp_point != end_point:
                                 start_point = tmp_point
@@ -73,6 +73,8 @@ class Main:
                             start_time = time.time()
                             self.route = map.find_route(start_point, end_point)
                             end_time = time.time()
+                            # for i in range(len(self.route) - 1, -1, -1):
+                            #     print(f"{self.route[i].from_pos} --> {self.route[i].to_pos}")
                             route_length = ratio * sum([
                                 road.length for road in self.route
                             ]) if self.route else 0.0
