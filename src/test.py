@@ -3,6 +3,10 @@ import os
 import pygame
 import time
 from pygame.locals import *
+from pygame.draw import rect
+from pygame.font import Font
+from pygame.display import set_mode, set_caption, flip
+from pygame.event import get
 from const import *
 from display import Display
 from initialize import *
@@ -14,9 +18,9 @@ from road import Road, TwoWayRoad
 class Main:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode(
+        self.screen = set_mode(
             (MAXIMIZED_WINDOW_WIDTH, MAXIMIZED_WINDOW_HEIGHT))
-        pygame.display.set_caption('Map Truc Bach')
+        set_caption('Map Truc Bach')
         self.route = None
         self.map = Map()
         self.display = Display()
@@ -37,16 +41,11 @@ class Main:
             display.show_ui(screen, start_point, end_point, start_time,
                             end_time, route_length, is_click)
             display.show_locations(screen, start_point, end_point)
-            # Draw the button on the screen with the background color
-            button_rect = pygame.draw.rect(screen, pygame.Color("blue"),
-                                           (UI_LEFT + 150, 250, 150, 50))
-            text_surface = pygame.font.Font(None,
-                                            36).render("Find route", True,
-                                                       pygame.Color("white"))
-            screen.blit(text_surface,
-                        text_surface.get_rect(center=button_rect.center))
-            pygame.display.flip()
-            for event in pygame.event.get():
+            button_rect = rect(screen, 'blue', (UI_LEFT + 150, 250, 150, 50))
+            text = Font(None, 36).render("Find route", True, Color("white"))
+            screen.blit(text, text.get_rect(center=button_rect.center))
+            flip()
+            for event in get():
                 if event.type == MOUSEMOTION:
                     display.mouse_pos = event.pos
                     display.close_points = [
@@ -72,10 +71,7 @@ class Main:
                         if start_point and end_point:
                             start_time = time.time()
                             self.route = map.find_route(start_point, end_point)
-                            self.route_filter()
                             end_time = time.time()
-                            # for road in self.route.__reversed__():
-                            #     print(road)
                             route_length = ratio * sum([
                                 road.length for road in self.route
                             ]) if self.route else 0.0
@@ -85,13 +81,11 @@ class Main:
                         # toggle map size
                         display.maximized = not display.maximized
                         if display.maximized:
-                            self.screen = pygame.display.set_mode(
-                                (MAXIMIZED_WINDOW_WIDTH,
-                                 MAXIMIZED_WINDOW_HEIGHT))
+                            self.screen = set_mode((MAXIMIZED_WINDOW_WIDTH,
+                                                    MAXIMIZED_WINDOW_HEIGHT))
                         else:
-                            self.screen = pygame.display.set_mode(
-                                (MINIMIZED_WINDOW_WIDTH,
-                                 MINIMIZED_WINDOW_HEIGHT))
+                            self.screen = set_mode((MINIMIZED_WINDOW_WIDTH,
+                                                    MINIMIZED_WINDOW_HEIGHT))
 
                     if event.key == K_r:
                         #print all roads:
@@ -125,16 +119,6 @@ class Main:
                 elif event.type == QUIT:
                     pygame.quit()
                     sys.exit()
-
-    def route_filter(self):
-        route_dict: dict[str, Road] = {}
-        for road in self.route:
-            tmp_key = str(road)
-            try:
-                _ = route_dict[tmp_key]
-            except KeyError:
-                route_dict[tmp_key] = road
-        self.route = route_dict.values()
 
     def choose_point_from_mouse_click(self, start_point: tuple[int, int]):
         nearest_road_from, nearest_road_to, min_dist = None, None, 999

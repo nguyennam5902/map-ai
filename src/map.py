@@ -2,15 +2,15 @@ import math
 import os
 from const import *
 from point import Point
-from road import Road, TwoWayRoad
+from road import Road
 import pygame
 
 
 class Map:
     def __init__(self):
         self.img = pygame.image.load(os.path.join(f'assets/truc_bach_map.png'))
-        self.map_points = {}
-        self.roads = []
+        self.map_points: dict[str, Point] = {}
+        self.roads: list[Road] = []
 
     def find_route(self, start_pos, end_pos) -> list[Road]:
 
@@ -52,17 +52,16 @@ class Map:
                 if process_to_point.pos == end_pos:
                     # FOUND
                     process_to_point.parent = current_point
-
-                    stack = []
+                    stack: list[Road] = []
                     child_node = process_to_point
                     parent_node = child_node.parent
                     while parent_node is not None:
                         for road_, point in parent_node.point.adjacents:
                             if str(point) == str(child_node):
                                 stack.append(road_)
+                                break
                         child_node = parent_node
                         parent_node = parent_node.parent
-
                     found = True
                     return stack
 
@@ -80,17 +79,13 @@ class Map:
                         process_to_point.parent = current_point
 
         if not found:
-            # print("CAN'T FIND ROUTE")
             return None
 
 
 class ProcessPoint:
     def __init__(self, point: Point):
-        self.point = point
-        self.pos = point.pos
-        self.f = INFINITY
-        self.g = INFINITY
-        self.h = INFINITY
+        self.point, self.pos = point, point.pos
+        self.f, self.g, self.h = INFINITY, INFINITY, INFINITY
         self.parent: ProcessPoint = None
 
     def _calc_dist(self, pos):
