@@ -3,6 +3,7 @@ from const import *
 
 
 class Point:
+    """Class used for point objects"""
     def __init__(self, pos, pos2=None):
         #receive pos as (x,y)
         if pos2 is None:
@@ -18,16 +19,14 @@ class Point:
             self.y = pos2
             self.adjacents = []
 
-    # calculate distance to another position
-    def _calc_dist(self, pos):
+    def _calc_dist(self, pos: tuple):
+        """Calculate distance from this position to another position
+        :param pos(Tuple[int, int]): A tuple containing the (x,y) coordinates of the `pos` position
+        """
         return math.dist(self.pos, pos)
 
-    # check if the position is near to another position
-    def _is_near(self, pos):
-        return self._calc_dist(pos) <= MIN_DIST_POINT
-
-    # return the point's degree = number of adjacents road
     def _degree(self):
+        """Return the point's degree = number of adjacents road"""
         return len(self.adjacents)
 
     def __eq__(self, _point: object):

@@ -5,8 +5,8 @@ from const import *
 from point import Point
 
 
-# we can only move from an end to another end
 class Road:
+    """Class used for one-way roads. For two-way road, see `TwoWayRoad` class below"""
     def __init__(self, from_point: Point, to_point: Point):
         self.from_point = from_point
         self.to_point = to_point
@@ -16,20 +16,23 @@ class Road:
         self.length = math.dist(from_point.pos, to_point.pos)
         self.from_point.adjacents.append((self, to_point))
 
-    # calculate distance from a position to the road
-    def _calc_dist(self, pos):
+    def _calc_dist(self, pos: tuple):
+        """Calculate distance from a position to the road
+
+        Parameters:
+            pos(Tuple[int, int]): A tuple containing the (x,y) coordinates of the `pos` position
+        """
         p1 = np.asarray(self.from_pos)
         p2 = np.asarray(self.to_pos)
         p3 = np.asarray(pos)
 
         return np.abs(np.cross(p2 - p1, p1 - p3)) / norm(p2 - p1)
 
-    # is a position is near to road
-    def _is_near(self, pos):
-        return self._calc_dist(pos) <= MIN_DIST_ROAD and self._is_look(pos)
-
     # is a position look to the road
-    def _is_look(self, pos):
+    def _is_look(self, pos: tuple) -> bool:
+        """Check if this road look to the `pos` position
+        :param pos(Tuple[int, int]): A tuple containing the (x,y) coordinates of the `pos` position
+        """
         x, y = self._perpendicular_pos(pos)
         x1, y1 = self.from_pos
         x2, y2 = self.to_pos
@@ -40,6 +43,15 @@ class Road:
         return is_x_middle and is_y_middle
 
     def _perpendicular_pos(self, pos):
+        """
+        Compute perpendicular position of a given point relative to the center of the map.
+
+        Parameters:
+            pos (Tuple[int, int]): The position (x,y) of a point on the map.
+
+        Returns:
+            Tuple[int, int]: The perpendicular position (x,y) of the given point relative to the center of the map.
+        """
         from_pos_x, from_pos_y = self.from_pos
         to_pos_x, to_pos_y = self.to_pos
         p_x, p_y = pos
@@ -61,8 +73,8 @@ class Road:
         return f'({self.from_pos.__str__()}, {self.to_pos.__str__()})'
 
 
-# We can move from an end to another end and vice versa
 class TwoWayRoad(Road):
+    """Class used for represent two-way roads."""
     def __init__(self, from_point, to_point):
         super().__init__(from_point, to_point)
         self.to_point.adjacents.append((self, from_point))

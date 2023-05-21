@@ -1,7 +1,7 @@
 from math import cos, sin, radians, atan2, degrees
 import pygame
-from pygame import Surface,Rect
-from pygame.draw import rect, circle, line,polygon
+from pygame import Surface, Rect
+from pygame.draw import rect, circle, line, polygon
 from pygame.image import load
 from pygame.transform import scale
 from const import *
@@ -10,6 +10,7 @@ from road import Road, TwoWayRoad
 
 
 class Display:
+    '''Class for display image, icons, ... in the application '''
     def __init__(self) -> None:
         self.maximized = True
         self.ratio = MINIMIZED_WINDOW_HEIGHT / MAXIMIZED_WINDOW_HEIGHT
@@ -21,9 +22,14 @@ class Display:
 
         self.toggle_show_defined = False
         self.mouse_pos = (0, 0)
-        self.close_points = []
 
     def show_background(self, surface: Surface, img: Surface):
+        """Show the map's image on the screen.
+
+        Parameters:
+            :param surface (pygame.Surface): The surface to display the image on.
+            :param img (pygame.Surface): The image to display.
+        """
         if self.maximized:
             surface.blit(img, (0, 0))
         else:
@@ -31,9 +37,19 @@ class Display:
                 scale(img, (MINIMIZED_WINDOW_WIDTH, MINIMIZED_WINDOW_HEIGHT)),
                 (0, 0))
 
-    def show_ui(self, surface: Surface, start_point: Point,
-                end_point: Point, start_time: float, end_time: float,
-                route_length: float, is_click: bool):
+    def show_ui(self, surface: Surface, start_point: Point, end_point: Point,
+                time: float, route_length: float, is_click: bool):
+        """
+        Display GUI on the screen.
+
+        Parameters:
+            surface (pygame.Surface): The surface to display the UI .
+            start_point (Point): Start point's position to show in the GUI.
+            end_point (Point): End point's position to show in the GUI.
+            time (float): Find route's time (ms).
+            route_length (float): The length of found route between 2 point (meters).
+            is_click (bool): A boolean to check if the GUI's 'Find route' button is clicked.
+        """
         color = COLOR["WHITE"]
         rect(surface, color, Rect(UI_LEFT, UI_TOP, UI_WIDTH, UI_HEIGHT))
 
@@ -47,14 +63,15 @@ class Display:
 
         time_text = ""
         if is_click and start_point and end_point:
-            time_text = "Search time: {:.2f} ms".format(1000 * (end_time - start_time))
+            time_text = "Search time: {:.2f} ms".format(time)
         search_time = self.font.render(time_text, True, 'black', 'white')
         search_time_rect = search_time.get_rect()
         search_time_rect.x, search_time_rect.y = UI_CENTER_x - 200, UI_CENTER_y - 100
 
         length_text, length_text_font = "", 'black'
         if is_click and start_point and end_point:
-            length_text = "Length: {:.2f} m".format(route_length) if route_length else "PATH NOT FOUND"
+            length_text = "Length: {:.2f} m".format(
+                route_length) if route_length else "PATH NOT FOUND"
         if not route_length:
             length_text_font = 'red'
         length_text = self.font.render(length_text, True, length_text_font)
@@ -79,12 +96,27 @@ class Display:
 
     def show_locations(self, surface: Surface, start_point: Point,
                        end_point: Point):
+        """Display start point's icon and end point's icon on the GUI.
+
+        Parameters:
+            :param surface (pygame.Surface): The surface to display.
+            :param start_point (Point): The start point's location.
+            :param end_point (Point): The end point's location.
+        """
         if start_point:
-            surface.blit(self.small_start_icon, (start_point[0] - 16, start_point[1] - 32))
+            surface.blit(self.small_start_icon,
+                         (start_point[0] - 16, start_point[1] - 32))
         if end_point:
-            surface.blit(self.small_end_icon, (end_point[0] - 16, end_point[1] - 32))
+            surface.blit(self.small_end_icon,
+                         (end_point[0] - 16, end_point[1] - 32))
 
     def draw_points(self, surface: Surface, points: list[Point]):
+        """Draw points into the map.
+
+        Parameters:
+            :param surface (pygame.Surface): The surface we want to draw points.
+            :param points (list[Point]): List of points.
+        """
         if self.maximized:
             for point in points:
                 center = point.pos
@@ -100,6 +132,13 @@ class Display:
                    surface: Surface,
                    roads: list[Road],
                    color=COLOR["BLACK"]):
+        """Draw roads into the map.
+
+        Parameters:
+            :param surface (pygame.Surface): The surface onto which the roads are to be drawn.
+            :param roads (list[Road]): A list of Road objects to be drawn.
+            :param color (Tuple[int, int, int]) (optional): The color of the roads. Default is black.
+        """
         width = ROAD_WIDTH
         if self.maximized:
             for road in roads:
@@ -122,6 +161,14 @@ class Display:
                    start_pos: tuple,
                    end_pos: tuple,
                    color=COLOR["BLACK"]):
+        """Draw an arrow on a surface from `start_pos` to `end_pos`.
+
+        Parameters:
+            :param surface (pygame.Surface): The surface onto which the arrow is to be drawn.
+            :param start_pos (Tuple[int, int]): A tuple containing the (x,y) coordinates of the arrow's start position.
+            :param end_pos (Tuple[int, int]): A tuple containing the (x,y) coordinates of the arrow's end position.
+            :param color (Tuple[int, int, int]) (optional): The color of the arrow. Default is black.
+        """
         width = ROAD_WIDTH
         x1, y1 = start_pos
         x2, y2 = end_pos
@@ -132,16 +179,25 @@ class Display:
         line(surface, color, start_pos, end_pos, width)
 
         arrow_width, arrow_len = 10, 15
-        arrow_points = [(0, 0), (-arrow_len, -arrow_width / 2), (-arrow_len, arrow_width / 2)]
+        arrow_points = [(0, 0), (-arrow_len, -arrow_width / 2),
+                        (-arrow_len, arrow_width / 2)]
 
         rotated_arrow_points = []
         for point in arrow_points:
-            rotated_x = point[0] * cos(radians(angle)) - point[1] * sin(radians(angle))
-            rotated_y = point[0] * sin(radians(angle)) + point[1] * cos(radians(angle))
+            rotated_x = point[0] * cos(radians(angle)) - point[1] * sin(
+                radians(angle))
+            rotated_y = point[0] * sin(radians(angle)) + point[1] * cos(
+                radians(angle))
             rotated_arrow_points.append((x2 + rotated_x, y2 + rotated_y))
         polygon(surface, color, rotated_arrow_points)
 
     def draw_found_route(self, surface: Surface, roads: list[Road]):
+        """Draw the found route on a surface.
+
+        Parameters:
+            :param surface (pygame.Surface): The surface onto which the route is to be drawn.
+            :param roads (list[Road]): A list of Road objects defining the route to be drawn.
+        """
         if roads is None: return
         color, width = COLOR["RED"], ROAD_WIDTH
         if self.maximized:

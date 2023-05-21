@@ -7,13 +7,22 @@ import pygame
 
 
 class Map:
+    """Class for setting map's image and finding routes"""
     def __init__(self):
         self.img = pygame.image.load(os.path.join(f'assets/truc_bach_map.png'))
         self.map_points: dict[str, Point] = {}
         self.roads: list[Road] = []
 
-    def find_route(self, start_pos, end_pos) -> list[Road]:
+    def find_route(self, start_pos: tuple, end_pos: tuple) -> list[Road]:
+        """Find the shortest route between start and end positions.
 
+        Parameters:
+            :param start_pos (Tuple[int, int]): A tuple containing the (x,y) coordinates of the starting position.
+            :param end_pos (Tuple[int, int]): A tuple containing the (x,y) coordinates of the end position.
+
+        Returns:
+            list[Road]: A list of `Road` objects defining the shortest route between start and end position.
+        """
         process_point: dict[str, ProcessPoint] = {}
         for key in self.map_points:
             process_point[key] = ProcessPoint(self.map_points[key])
@@ -83,12 +92,16 @@ class Map:
 
 
 class ProcessPoint:
+    """Class used for searching routes"""
     def __init__(self, point: Point):
         self.point, self.pos = point, point.pos
         self.f, self.g, self.h = INFINITY, INFINITY, INFINITY
         self.parent: ProcessPoint = None
 
-    def _calc_dist(self, pos):
+    def _calc_dist(self, pos: tuple):
+        """Calculate distance form this `ProcessPoint`'s position to `pos`'s positon
+            :param pos (Tuple[int, int]): A tuple containing the (x,y) coordinates of the point position
+        """
         return math.dist(self.pos, pos)
 
     def __str__(self):

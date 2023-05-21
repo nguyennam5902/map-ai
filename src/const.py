@@ -1,32 +1,24 @@
-MAXIMIZED_WINDOW_WIDTH = 1440  #980
-MAXIMIZED_WINDOW_HEIGHT = 890
+MAXIMIZED_WINDOW_WIDTH, MAXIMIZED_WINDOW_HEIGHT = 1440, 890
+'''Maximum height and width for display screen'''
 
-MINIMIZED_WINDOW_WIDTH = 936
-MINIMIZED_WINDOW_HEIGHT = 850
+MINIMIZED_WINDOW_WIDTH, MINIMIZED_WINDOW_HEIGHT = 936, 850
+'''Minimum height and width for display screen'''
 
-UI_TOP = 0
-UI_LEFT = 980
-UI_WIDTH = 460
-UI_HEIGHT = 890
+UI_TOP, UI_LEFT, UI_WIDTH, UI_HEIGHT = 0, 980, 460, 890
+'''Coordinates for setting map's GUI'''
 
 INFINITY = 999999
+'''Default value for f, g, h between 2 point when searching route'''
 
 COLOR = {
     "RED": (255, 0, 0),
     "BLACK": (0, 0, 0),
     "WHITE": (255, 255, 255),
 }
+'''Dictionary for colors using in the application '''
 
-INF = 9999999.99
-
-# road's width to show on map
 ROAD_WIDTH = 3
+'''Road's width to show on the map'''
 
-# distance to consider a position is near to a road
-MIN_DIST_ROAD = 5
-
-# distance to consider a position is near to another position
-MIN_DIST_POINT = 5
-
-# Cirlce point's radius
 POINT_RADIUS = 3
+'''Circle point's radius'''

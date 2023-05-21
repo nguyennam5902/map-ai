@@ -16,6 +16,7 @@ from road import Road, TwoWayRoad
 
 
 class Main:
+    """Class used for run the application using `pygame`"""
     def __init__(self):
         pygame.init()
         self.screen = set_mode(
@@ -28,6 +29,7 @@ class Main:
         self.dragging = False
 
     def mainloop(self):
+        """The loop of the app"""
         screen = self.screen
         map = self.map
         display = self.display
@@ -38,23 +40,16 @@ class Main:
             display.draw_points(screen, list(map.map_points.values()))
             display.draw_roads(screen, map.roads)
             display.draw_found_route(screen, self.route)
-            display.show_ui(screen, start_point, end_point, start_time,
-                            end_time, route_length, is_click)
+            display.show_ui(screen, start_point, end_point,
+                            1000 * (end_time - start_time), route_length,
+                            is_click)
             display.show_locations(screen, start_point, end_point)
             button_rect = rect(screen, 'blue', (UI_LEFT + 150, 250, 150, 50))
             text = Font(None, 36).render("Find route", True, Color("white"))
             screen.blit(text, text.get_rect(center=button_rect.center))
             flip()
             for event in get():
-                if event.type == MOUSEMOTION:
-                    display.mouse_pos = event.pos
-                    display.close_points = [
-                        map.map_points[key].pos for key in map.map_points
-                        if map.map_points[key]._is_near(event.pos)
-                    ]
-                if event.type == MOUSEBUTTONDOWN:
-                    x1, y1 = event.pos
-                elif event.type == MOUSEBUTTONUP:
+                if event.type == MOUSEBUTTONUP:
                     x, y = event.pos
                     is_click = False
                     if UI_LEFT > x > 16 and y > 32:
@@ -121,6 +116,13 @@ class Main:
                     sys.exit()
 
     def choose_point_from_mouse_click(self, start_point: tuple[int, int]):
+        """
+        Based on a mouse click, choose a point on the screen that its position is exists in the map data.
+
+        :param start_point: A tuple with the (x, y) coordinates of the starting point.
+
+        :return: A tuple with the (x, y) coordinates of the chosen point.
+        """
         nearest_road_from, nearest_road_to, min_dist = None, None, 999
         for road in self.map.roads:
             if road._is_look(start_point):

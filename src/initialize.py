@@ -1,4 +1,4 @@
-# For initalizing roads and points
+"""Class used for save one-way roads (`ONE_WAY_ROADS`)  and two-way roads (`TWO_WAY_ROADS`)"""
 
 TWO_WAY_ROADS = [
     ((411, 172), (374, 141)),
@@ -141,7 +141,6 @@ TWO_WAY_ROADS = [
     ((419, 515), (424, 419)),
     ((585, 599), (605, 600)),
     ((586, 576), (595, 590)),
-    #((515, 625), (505, 552)),
     ((515, 625), (511, 599)),
     ((511, 599), (505, 552)),
     ((511, 599), (528, 601)),
@@ -205,8 +204,9 @@ TWO_WAY_ROADS = [
     ((48, 725), (30, 725)),
     ((30, 725), (0, 735)),
     ((561, 191), (457, 79)),
-    ((457, 79), (406, 1)),
+    ((457, 79), (406, 1))
 ]
+"""A two-way road is a roadway that allows for two-way traffic, meaning vehicles can travel in both directions."""
 
 ONE_WAY_ROADS = [
     ((35, 825), (30, 808)),
@@ -291,5 +291,6 @@ ONE_WAY_ROADS = [
     ((30, 769), (21, 798)),
     ((21, 798), (20, 826)),
     ((411, 20), (386, 42)),
-    ((447, 27), (427, 0)),
+    ((447, 27), (427, 0))
 ]
+"""A one-way road is a roadway that only allows for traffic to flow in one direction. Vehicles can only travel in one direction."""
