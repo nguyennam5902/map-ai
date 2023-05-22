@@ -35,6 +35,27 @@ class Main:
         display = self.display
         start_point, end_point, is_click = None, None, False
         start_time, end_time, route_length, ratio = 0.0, 0.0, 0.0, 1.12
+        # Build roads on the map
+        points_set = set([from_pos for from_pos, to_pos in TWO_WAY_ROADS])
+        for from_pos, to_pos in TWO_WAY_ROADS:
+            points_set.add(to_pos)
+        for from_pos, to_pos in ONE_WAY_ROADS:
+            points_set.add(from_pos)
+            points_set.add(to_pos)
+
+        for point in points_set:
+            self.map.map_points[str(point)] = Point(point)
+
+        for from_pos, to_pos in TWO_WAY_ROADS:
+            self.map.roads.append(
+                TwoWayRoad(map.map_points[str(from_pos)],
+                           map.map_points[str(to_pos)]))
+
+        for from_pos, to_pos in ONE_WAY_ROADS:
+            self.map.roads.append(
+                Road(map.map_points[str(from_pos)],
+                     map.map_points[str(to_pos)]))
+        # Start the loop
         while True:
             display.show_background(screen, map.img)
             display.draw_points(screen, list(map.map_points.values()))
@@ -82,36 +103,8 @@ class Main:
                             self.screen = set_mode((MINIMIZED_WINDOW_WIDTH,
                                                     MINIMIZED_WINDOW_HEIGHT))
 
-                    if event.key == K_r:
-                        #print all roads:
-                        for road in map.roads:
-                            if (not isinstance(road, TwoWayRoad)):
-                                print(road)
-
-                    if event.key == K_1:
-                        # create map
-                        points_set = set(
-                            [from_pos for from_pos, to_pos in TWO_WAY_ROADS])
-                        for from_pos, to_pos in TWO_WAY_ROADS:
-                            points_set.add(to_pos)
-                        for from_pos, to_pos in ONE_WAY_ROADS:
-                            points_set.add(from_pos)
-                            points_set.add(to_pos)
-
-                        for point in points_set:
-                            self.map.map_points[str(point)] = Point(point)
-
-                        for from_pos, to_pos in TWO_WAY_ROADS:
-                            self.map.roads.append(
-                                TwoWayRoad(map.map_points[str(from_pos)],
-                                           map.map_points[str(to_pos)]))
-
-                        for from_pos, to_pos in ONE_WAY_ROADS:
-                            self.map.roads.append(
-                                Road(map.map_points[str(from_pos)],
-                                     map.map_points[str(to_pos)]))
-
                 elif event.type == QUIT:
+                    # Quit the app
                     pygame.quit()
                     sys.exit()
 
