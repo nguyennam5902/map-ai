@@ -22,7 +22,7 @@ class Main:
         self.screen = set_mode(
             (MAXIMIZED_WINDOW_WIDTH, MAXIMIZED_WINDOW_HEIGHT))
         set_caption('Map Truc Bach')
-        self.route = None
+        self.path = None
         self.map = Map()
         self.display = Display()
         self.start_point = None
@@ -60,13 +60,13 @@ class Main:
             display.show_background(screen, map.img)
             display.draw_points(screen, list(map.map_points.values()))
             display.draw_roads(screen, map.roads)
-            display.draw_found_route(screen, self.route)
+            display.draw_found_path(screen, self.path)
             display.show_ui(screen, start_point, end_point,
                             1000 * (end_time - start_time), route_length,
                             is_click)
             display.show_locations(screen, start_point, end_point)
             button_rect = rect(screen, 'blue', (UI_LEFT + 150, 250, 150, 50))
-            text = Font(None, 36).render("Find route", True, Color("white"))
+            text = Font(None, 36).render("Find path", True, Color("white"))
             screen.blit(text, text.get_rect(center=button_rect.center))
             flip()
             for event in get():
@@ -74,7 +74,7 @@ class Main:
                     x, y = event.pos
                     is_click = False
                     if UI_LEFT > x > 16 and y > 32:
-                        self.route = []
+                        self.path = []
                         tmp_point = self.choose_point_from_mouse_click((x, y))
                         if event.button == 1:  # Left mouse button
                             if tmp_point != end_point:
@@ -86,11 +86,11 @@ class Main:
                         is_click = True
                         if start_point and end_point:
                             start_time = time.time()
-                            self.route = map.find_route(start_point, end_point)
+                            self.path = map.find_path(start_point, end_point)
                             end_time = time.time()
                             route_length = ratio * sum([
-                                road.length for road in self.route
-                            ]) if self.route else 0.0
+                                road.length for road in self.path
+                            ]) if self.path else 0.0
 
                 elif event.type == KEYDOWN:
                     if event.key == K_s:

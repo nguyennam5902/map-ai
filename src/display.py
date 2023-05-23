@@ -191,7 +191,7 @@ class Display:
             rotated_arrow_points.append((x2 + rotated_x, y2 + rotated_y))
         polygon(surface, color, rotated_arrow_points)
 
-    def draw_found_route(self, surface: Surface, roads: list[Road]):
+    def draw_found_path(self, surface: Surface, roads: list[Road]):
         """Draw the found route on a surface.
 
         Parameters:
@@ -200,6 +200,7 @@ class Display:
         """
         if roads is None: return
         color, width = COLOR["RED"], ROAD_WIDTH
+        
         if self.maximized:
             self.draw_roads(surface, roads, color)
         else:
