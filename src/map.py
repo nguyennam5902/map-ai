@@ -76,7 +76,7 @@ class Map:
 
                 elif not str(to_point) in closed_lst:
                     g_new = current_point.g + road.length
-                    h_new = current_point._calc_dist(end_pos)
+                    h_new = process_to_point._calc_dist(end_pos)
                     f_new = g_new + h_new
 
                     if str(to_point) not in open_lst or current_f > f_new:
