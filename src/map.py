@@ -1,8 +1,9 @@
 import math
 import os
 from const import *
+from initialize import *
 from point import Point
-from road import Road
+from road import Road, TwoWayRoad
 import pygame
 
 
@@ -12,6 +13,25 @@ class Map:
         self.img = pygame.image.load(os.path.join(f'assets/truc_bach_map.png'))
         self.map_points: dict[str, Point] = {}
         self.roads: list[Road] = []
+        
+        # Build roads on the map
+        points_set = set([from_pos for from_pos, to_pos in TWO_WAY_ROADS])
+
+        for from_pos, to_pos in TWO_WAY_ROADS:
+            points_set.add(to_pos)
+        for from_pos, to_pos in ONE_WAY_ROADS:
+            points_set.add(from_pos)
+            points_set.add(to_pos)
+        for point in points_set:
+            self.map_points[str(point)] = Point(point)
+        for from_pos, to_pos in TWO_WAY_ROADS:
+            self.roads.append(
+                TwoWayRoad(self.map_points[str(from_pos)],
+                           self.map_points[str(to_pos)]))
+        for from_pos, to_pos in ONE_WAY_ROADS:
+            self.roads.append(
+                Road(self.map_points[str(from_pos)],
+                     self.map_points[str(to_pos)]))
 
     def find_path(self, start_pos: tuple, end_pos: tuple) -> list[Road]:
         """Find the shortest path between start and end positions.
@@ -92,17 +112,16 @@ class Map:
 
 
 class ProcessPoint:
-    """
-        Class used for searching path
-    """
+    """Class used for searching path"""
     def __init__(self, point: Point):
         self.point, self.pos = point, point.pos
         self.f, self.g, self.h = INFINITY, INFINITY, INFINITY
         self.parent: ProcessPoint = None
 
     def _calc_dist(self, pos: tuple):
-        """
-            Calculate distance form this `ProcessPoint`'s position to `pos`'s positon
+        """Calculate distance form this `ProcessPoint`'s position to `pos`'s positon
+
+        Parameters:
             :param pos (Tuple[int, int]): A tuple containing the (x,y) coordinates of the point position
         """
         return math.dist(self.pos, pos)

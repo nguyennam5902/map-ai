@@ -21,7 +21,9 @@ class Point:
 
     def _calc_dist(self, pos: tuple):
         """Calculate distance from this position to another position
-        :param pos(Tuple[int, int]): A tuple containing the (x,y) coordinates of the `pos` position
+
+        Parameter:
+            :param pos(Tuple[int, int]): A tuple containing the (x,y) coordinates of the `pos` position
         """
         return math.dist(self.pos, pos)
 

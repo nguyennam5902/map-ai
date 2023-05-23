@@ -1,3 +1,4 @@
+'''Constant values used for setting screen, drawing roads and GUI for the application'''
 MAXIMIZED_WINDOW_WIDTH, MAXIMIZED_WINDOW_HEIGHT = 1440, 890
 '''Maximum height and width for display screen'''
 
@@ -13,7 +14,7 @@ INFINITY = 999999
 COLOR = {
     "RED": (255, 0, 0),
     "BLACK": (0, 0, 0),
-    "WHITE": (255, 255, 255),
+    "WHITE": (255, 255, 255)
 }
 '''Dictionary for colors using in the application '''
 

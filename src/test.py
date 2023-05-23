@@ -11,8 +11,6 @@ from const import *
 from display import Display
 from initialize import *
 from map import Map
-from point import Point
-from road import Road, TwoWayRoad
 
 
 class Main:
@@ -23,10 +21,9 @@ class Main:
             (MAXIMIZED_WINDOW_WIDTH, MAXIMIZED_WINDOW_HEIGHT))
         set_caption('Map Truc Bach')
         self.path = None
+        """Found route will be saved in here"""
         self.map = Map()
         self.display = Display()
-        self.start_point = None
-        self.dragging = False
 
     def mainloop(self):
         """The loop of the app"""
@@ -35,26 +32,6 @@ class Main:
         display = self.display
         start_point, end_point, is_click = None, None, False
         start_time, end_time, route_length, ratio = 0.0, 0.0, 0.0, 1.12
-        # Build roads on the map
-        points_set = set([from_pos for from_pos, to_pos in TWO_WAY_ROADS])
-        for from_pos, to_pos in TWO_WAY_ROADS:
-            points_set.add(to_pos)
-        for from_pos, to_pos in ONE_WAY_ROADS:
-            points_set.add(from_pos)
-            points_set.add(to_pos)
-
-        for point in points_set:
-            self.map.map_points[str(point)] = Point(point)
-
-        for from_pos, to_pos in TWO_WAY_ROADS:
-            self.map.roads.append(
-                TwoWayRoad(map.map_points[str(from_pos)],
-                           map.map_points[str(to_pos)]))
-
-        for from_pos, to_pos in ONE_WAY_ROADS:
-            self.map.roads.append(
-                Road(map.map_points[str(from_pos)],
-                     map.map_points[str(to_pos)]))
         # Start the loop
         while True:
             display.show_background(screen, map.img)
@@ -88,9 +65,9 @@ class Main:
                             start_time = time.time()
                             self.path = map.find_path(start_point, end_point)
                             end_time = time.time()
-                            route_length = ratio * sum([
-                                road.length for road in self.path
-                            ]) if self.path else 0.0
+                            route_length = ratio * sum(
+                                [road.length
+                                 for road in self.path]) if self.path else 0.0
 
                 elif event.type == KEYDOWN:
                     if event.key == K_s:

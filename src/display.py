@@ -43,7 +43,7 @@ class Display:
         Display GUI on the screen.
 
         Parameters:
-            surface (pygame.Surface): The surface to display the UI .
+            surface (pygame.Surface): The surface to display the UI.
             start_point (Point): Start point's position to show in the GUI.
             end_point (Point): End point's position to show in the GUI.
             time (float): Find route's time (ms).

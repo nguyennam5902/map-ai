@@ -20,7 +20,7 @@ class Road:
         """Calculate distance from a position to the road
 
         Parameters:
-            pos(Tuple[int, int]): A tuple containing the (x,y) coordinates of the `pos` position
+            :param pos(Tuple[int, int]): A tuple containing the (x,y) coordinates of the `pos` position
         """
         p1 = np.asarray(self.from_pos)
         p2 = np.asarray(self.to_pos)
@@ -28,9 +28,9 @@ class Road:
 
         return np.abs(np.cross(p2 - p1, p1 - p3)) / norm(p2 - p1)
 
-    # is a position look to the road
     def _is_look(self, pos: tuple) -> bool:
         """Check if this road look to the `pos` position
+
         :param pos(Tuple[int, int]): A tuple containing the (x,y) coordinates of the `pos` position
         """
         x, y = self._perpendicular_pos(pos)
