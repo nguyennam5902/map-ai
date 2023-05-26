@@ -87,12 +87,17 @@ class Map:
                     while parent_node is not None:
                         for road_, point in parent_node.point.adjacents:
                             if str(point) == str(child_node):
-                                stack.append(road_)
+                                stack.insert(0, road_)
                                 break
                         child_node = parent_node
                         parent_node = parent_node.parent
+
                     found = True
-                    return stack
+                    return (
+                        stack,
+                        [ process_point[key].point for key in open_lst ],
+                        [ process_point[key].point for key in closed_lst ]
+                    )
 
                 elif not str(to_point) in closed_lst:
                     g_new = current_point.g + road.length
@@ -108,7 +113,11 @@ class Map:
                         process_to_point.parent = current_point
 
         if not found:
-            return None
+            return (
+                None,
+                [ process_point[key].point for key in open_lst ],
+                [ process_point[key].point for key in closed_lst ]
+            )
 
 
 class ProcessPoint:

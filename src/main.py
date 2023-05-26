@@ -25,6 +25,11 @@ class Main:
         self.map = Map()
         self.display = Display()
 
+        self.show_defined_roads = False
+        self.open_list = []
+        self.closed_list = []
+        self.show_open_close_list = False
+
     def mainloop(self):
         """The loop of the app"""
         screen = self.screen
@@ -35,8 +40,15 @@ class Main:
         # Start the loop
         while True:
             display.show_background(screen, map.img)
-            display.draw_points(screen, list(map.map_points.values()))
-            display.draw_roads(screen, map.roads)
+
+            if self.show_defined_roads:
+                display.draw_points(screen, list(map.map_points.values()))
+                display.draw_roads(screen, map.roads)
+
+            if self.show_open_close_list:
+                display.draw_points(screen, self.open_list, COLOR["BLUE"], 5)
+                display.draw_points(screen, self.closed_list, COLOR["RED"], 5)
+
             display.draw_found_path(screen, self.path)
             display.show_ui(screen, start_point, end_point,
                             1000 * (end_time - start_time), route_length,
@@ -52,6 +64,8 @@ class Main:
                     is_click = False
                     if UI_LEFT > x > 16 and y > 32:
                         self.path = []
+                        self.closed_list = []
+                        self.open_list = []
                         tmp_point = self.choose_point_from_mouse_click((x, y))
                         if event.button == 1:  # Left mouse button
                             if tmp_point != end_point:
@@ -63,7 +77,7 @@ class Main:
                         is_click = True
                         if start_point and end_point:
                             start_time = time.time()
-                            self.path = map.find_path(start_point, end_point)
+                            self.path, self.open_list, self.closed_list = map.find_path(start_point, end_point)
                             end_time = time.time()
                             route_length = ratio * sum(
                                 [road.length
@@ -71,7 +85,7 @@ class Main:
 
                 elif event.type == KEYDOWN:
                     if event.key == K_s:
-                        # toggle map size
+                        # Toggle window size
                         display.maximized = not display.maximized
                         if display.maximized:
                             self.screen = set_mode((MAXIMIZED_WINDOW_WIDTH,
@@ -79,6 +93,18 @@ class Main:
                         else:
                             self.screen = set_mode((MINIMIZED_WINDOW_WIDTH,
                                                     MINIMIZED_WINDOW_HEIGHT))
+                            
+                    elif event.key == K_t:
+                        # Toggle see defined roads
+                        self.show_defined_roads = not self.show_defined_roads
+                    
+                    elif event.key == K_r:
+                        self.show_open_close_list = not self.show_open_close_list
+
+                    elif event.key == K_q:
+                        # Quit the app
+                        pygame.quit()
+                        sys.exit()
 
                 elif event.type == QUIT:
                     # Quit the app

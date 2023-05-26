@@ -110,7 +110,7 @@ class Display:
             surface.blit(self.small_end_icon,
                          (end_point[0] - 16, end_point[1] - 32))
 
-    def draw_points(self, surface: Surface, points: list[Point]):
+    def draw_points(self, surface: Surface, points: list[Point], color=COLOR["BLACK"], radius=POINT_RADIUS):
         """Draw points into the map.
 
         Parameters:
@@ -120,12 +120,10 @@ class Display:
         if self.maximized:
             for point in points:
                 center = point.pos
-                color, radius = COLOR["BLACK"], POINT_RADIUS
                 circle(surface, color, center, radius)
         else:
             for point in points:
                 center = (point.x * self.ratio, point.y * self.ratio)
-                color, radius = COLOR["BLACK"], POINT_RADIUS
                 circle(surface, color, center, radius)
 
     def draw_roads(self,
