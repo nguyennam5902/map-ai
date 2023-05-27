@@ -21,14 +21,12 @@ class Main:
             (MAXIMIZED_WINDOW_WIDTH, MAXIMIZED_WINDOW_HEIGHT))
         set_caption('Map Truc Bach')
         self.path = None
-        """Found route will be saved in here"""
+        """Found path will be saved here"""
         self.map = Map()
         self.display = Display()
 
-        self.show_defined_roads = False
-        self.open_list = []
-        self.closed_list = []
-        self.show_open_close_list = False
+        self.show_defined_roads, self.show_open_close_list = False, False
+        self.open_list, self.closed_list = [], []
 
     def mainloop(self):
         """The loop of the app"""
@@ -55,7 +53,7 @@ class Main:
                             is_click)
             display.show_locations(screen, start_point, end_point)
             button_rect = rect(screen, 'blue', (UI_LEFT + 150, 250, 150, 50))
-            text = Font(None, 36).render("Find path", True, Color("white"))
+            text = Font(None, 36).render("Find path", True, COLOR["WHITE"])
             screen.blit(text, text.get_rect(center=button_rect.center))
             flip()
             for event in get():
@@ -77,7 +75,8 @@ class Main:
                         is_click = True
                         if start_point and end_point:
                             start_time = time.time()
-                            self.path, self.open_list, self.closed_list = map.find_path(start_point, end_point)
+                            self.path, self.open_list, self.closed_list = map.find_path(
+                                start_point, end_point)
                             end_time = time.time()
                             route_length = ratio * sum(
                                 [road.length
@@ -93,11 +92,11 @@ class Main:
                         else:
                             self.screen = set_mode((MINIMIZED_WINDOW_WIDTH,
                                                     MINIMIZED_WINDOW_HEIGHT))
-                            
+
                     elif event.key == K_t:
                         # Toggle see defined roads
                         self.show_defined_roads = not self.show_defined_roads
-                    
+
                     elif event.key == K_r:
                         self.show_open_close_list = not self.show_open_close_list
 

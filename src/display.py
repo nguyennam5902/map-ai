@@ -50,8 +50,8 @@ class Display:
             route_length (float): The length of found route between 2 point (meters).
             is_click (bool): A boolean to check if the GUI's 'Find route' button is clicked.
         """
-        color = COLOR["WHITE"]
-        rect(surface, color, Rect(UI_LEFT, UI_TOP, UI_WIDTH, UI_HEIGHT))
+        rect(surface, COLOR["WHITE"], Rect(UI_LEFT, UI_TOP, UI_WIDTH,
+                                           UI_HEIGHT))
 
         UI_CENTER_x = UI_LEFT + UI_WIDTH // 2
         UI_CENTER_y = UI_TOP + UI_HEIGHT // 2
@@ -110,7 +110,11 @@ class Display:
             surface.blit(self.small_end_icon,
                          (end_point[0] - 16, end_point[1] - 32))
 
-    def draw_points(self, surface: Surface, points: list[Point], color=COLOR["BLACK"], radius=POINT_RADIUS):
+    def draw_points(self,
+                    surface: Surface,
+                    points: list[Point],
+                    color=COLOR["BLACK"],
+                    radius=POINT_RADIUS):
         """Draw points into the map.
 
         Parameters:
@@ -198,7 +202,7 @@ class Display:
         """
         if roads is None: return
         color, width = COLOR["RED"], ROAD_WIDTH
-        
+
         if self.maximized:
             self.draw_roads(surface, roads, color)
         else:

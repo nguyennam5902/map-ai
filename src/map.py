@@ -12,8 +12,9 @@ class Map:
     def __init__(self):
         self.img = pygame.image.load(os.path.join(f'assets/truc_bach_map.png'))
         self.map_points: dict[str, Point] = {}
+        """Map points will be saved here"""
         self.roads: list[Road] = []
-        
+        """All roads, including one-way roads and two-way roads will be saved here"""
         # Build roads on the map
         points_set = set([from_pos for from_pos, to_pos in TWO_WAY_ROADS])
 
@@ -33,7 +34,7 @@ class Map:
                 Road(self.map_points[str(from_pos)],
                      self.map_points[str(to_pos)]))
 
-    def find_path(self, start_pos: tuple, end_pos: tuple) -> list[Road]:
+    def find_path(self, start_pos: tuple, end_pos: tuple):
         """Find the shortest path between start and end positions.
 
         Parameters:
@@ -42,6 +43,10 @@ class Map:
 
         Returns:
             list[Road]: A list of `Road` objects defining the shortest route between start and end position.
+
+            list[Point]: A list of `Point` objects represent open list when find route from `start_pos` to `end_pos`.
+
+            list[Point]: A list of `Point` objects represent closed list when find route from `start_pos` to `end_pos`.            
         """
         process_point: dict[str, ProcessPoint] = {}
         for key in self.map_points:
@@ -93,11 +98,9 @@ class Map:
                         parent_node = parent_node.parent
 
                     found = True
-                    return (
-                        stack,
-                        [ process_point[key].point for key in open_lst ],
-                        [ process_point[key].point for key in closed_lst ]
-                    )
+                    return (stack,
+                            [process_point[key].point for key in open_lst],
+                            [process_point[key].point for key in closed_lst])
 
                 elif not str(to_point) in closed_lst:
                     g_new = current_point.g + road.length
@@ -113,11 +116,8 @@ class Map:
                         process_to_point.parent = current_point
 
         if not found:
-            return (
-                None,
-                [ process_point[key].point for key in open_lst ],
-                [ process_point[key].point for key in closed_lst ]
-            )
+            return (None, [process_point[key].point for key in open_lst],
+                    [process_point[key].point for key in closed_lst])
 
 
 class ProcessPoint:
