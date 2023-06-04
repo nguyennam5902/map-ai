@@ -60,9 +60,12 @@ class Map:
 
         open_lst = {str(start_pos)}
         closed_lst = set()
+        process_point[str(start_pos)].g = 0
 
         found = False
-
+        print(
+            f"{str(start_pos)} --> {str(end_pos)}\n-----------------------------------------"
+        )
         while len(open_lst) > 0:
             # find node with the least f on the open list -> q
             minf = min([process_point[key].f for key in open_lst])
@@ -75,9 +78,11 @@ class Map:
             # pop q from open list
             open_lst.remove(q)
             closed_lst.add(q)
+            print("Searching point:", q)
 
             # generate q's successors and set their parent to q
             current_point = process_point[q]
+            tmp_list = []
             for road, to_point in current_point.point.adjacents:
 
                 # if successor is the goal, stop searching and output
@@ -85,6 +90,8 @@ class Map:
                 current_f = process_to_point.f
                 if process_to_point.pos == end_pos:
                     # FOUND
+                    print("T(n): ", end="")
+                    print(tmp_list)
                     process_to_point.parent = current_point
                     stack: list[Road] = []
                     child_node = process_to_point
@@ -109,11 +116,21 @@ class Map:
 
                     if str(to_point) not in open_lst or current_f > f_new:
                         open_lst.add(str(to_point))
+                        tmp_list.append(str(to_point))
 
                         process_to_point.f = f_new
                         process_to_point.g = g_new
                         process_to_point.h = h_new
                         process_to_point.parent = current_point
+            print("T(n): ", end="")
+            print(tmp_list)
+            print("Open list: ", end="")
+            print(", ".join([
+                key + ": " + str(round(process_point[key].f, 2))
+                for key in open_lst
+            ]))
+            print("Closed list: ", end="")
+            print(closed_lst)
 
         if not found:
             return (None, [process_point[key].point for key in open_lst],
