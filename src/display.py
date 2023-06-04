@@ -20,9 +20,6 @@ class Display:
         self.small_start_icon = scale(load("assets/start.png"), (32, 32))
         self.small_end_icon = scale(load("assets/destination.png"), (32, 32))
 
-        self.toggle_show_defined = False
-        self.mouse_pos = (0, 0)
-
     def show_background(self, surface: Surface, img: Surface):
         """Show the map's image on the screen.
 
