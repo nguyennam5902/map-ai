@@ -15,6 +15,9 @@ class Map:
         """Map points will be saved here"""
         self.roads: list[Road] = []
         """All roads, including one-way roads and two-way roads will be saved here"""
+        
+        self.mid_points = {} #(Road, mid_point)
+        
         # Build roads on the map
         points_set = set([from_pos for from_pos, to_pos in TWO_WAY_ROADS])
 
@@ -33,6 +36,22 @@ class Map:
             self.roads.append(
                 Road(self.map_points[str(from_pos)],
                      self.map_points[str(to_pos)]))
+            
+    def add_mid_point(self, pos: tuple, road: Road):
+        mid_point = Point(pos)
+        from_point = road.from_point
+        to_point = road.to_point
+        
+        if isinstance(road, TwoWayRoad):
+            TwoWayRoad(from_point, mid_point)
+            TwoWayRoad(mid_point, to_point)
+            
+        else:
+            Road(from_point, mid_point)
+            Road(mid_point, to_point)
+            
+        self.mid_points[str(pos)] = (road, mid_point)
+        self.map_points[str(pos)] = mid_point
 
     def find_path(self, start_pos: tuple, end_pos: tuple):
         """Find the shortest path between start and end positions.

@@ -214,6 +214,9 @@ TWO_WAY_ROADS = [
     ((880, 506), (816, 442)),
     ((953, 561), (880, 506)),
     ((978, 578), (953, 561)),
+    ((447, 27), (427, 0)),
+    ((447, 27), (427, 14)),
+    ((953, 561), (944, 570)),
 ]
 """A two-way road is a roadway that allows for two-way traffic, meaning vehicles can travel in both directions."""
 
@@ -288,6 +291,6 @@ ONE_WAY_ROADS = [
     ((30, 769), (21, 798)),
     ((21, 798), (20, 826)),
     ((411, 20), (386, 42)),
-    ((447, 27), (427, 0)),
+    
 ]
 """A one-way road is a roadway that only allows for traffic to flow in one direction. Vehicles can only travel in one direction."""
